@@ -1,0 +1,2306 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Happy Birthday, Daenerys! ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { -webkit-text-size-adjust: 100%; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: #ffffff;
+            background: linear-gradient(rgba(5, 10, 25, 0.4), rgba(5, 10, 25, 0.6)),
+                        url('bg.png') no-repeat center center fixed;
+            background-size: cover;
+            padding-top: 60px;
+            overflow: hidden;
+            height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #starsCanvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none;
+        }
+
+        .navbar {
+            position: fixed; top: 0; left: 0; width: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 60px; z-index: 1000;
+            background: rgba(6, 11, 25, 0.4);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-logo {
+            display: flex; align-items: center; gap: 8px; cursor: pointer;
+            background: linear-gradient(90deg, #ffffff, #dcdfff, #ffffff);
+            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: logoShimmer 4s linear infinite, logoGlowPulse 3s infinite ease-in-out;
+            font-weight: 700; font-size: 1.3rem; letter-spacing: 3px;
+        }
+        .logo-star {
+            width: 28px; height: 28px; display: inline-block; margin-left: 10px;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.9)) brightness(1.3);
+            animation: starPulse 3s infinite ease-in-out;
+        }
+
+        .nav-links { display: flex; list-style: none; gap: 25px; }
+        .nav-links a {
+            color: #9fa4b0; text-decoration: none; font-size: 0.85rem;
+            text-transform: uppercase; letter-spacing: 2px; transition: all 0.3s ease;
+            position: relative; padding: 5px 0;
+        }
+        .nav-links a:hover, .nav-links a.active { color: #ffffff; text-shadow: 0 0 8px rgba(255, 255, 255, 0.6); }
+        .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: #ffffff; box-shadow: 0 0 8px #ffffff; transition: width 0.3s ease; }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+        .page-container {
+            position: absolute; top: 60px; left: 0; width: 100%; height: calc(100vh - 60px);
+            display: flex; justify-content: center; align-items: center; padding: 20px; z-index: 10;
+            opacity: 0; pointer-events: none; transform: scale(0.98);
+            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow-y: auto;
+        }
+        .active-page { opacity: 1 !important; pointer-events: auto !important; transform: scale(1) !important; }
+
+        .hero-content { max-width: 800px; width: 100%; text-align: center; position: relative; }
+        .top-tag { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 6px; color: #a5b4fc; margin-bottom: 25px; font-weight: 600; }
+        h1 {
+            font-size: 4.5rem; font-weight: 700; line-height: 1.1; letter-spacing: 2px; margin-bottom: 30px;
+            background: linear-gradient(90deg, #ffffff, #b9caff, #ffffff, #85a3ff, #ffffff); background-size: 200% auto;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: textShimmer 6s linear infinite;
+        }
+        .highlight { background: linear-gradient(45deg, #ffffff, #85a3ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: neonPulse 3s infinite ease-in-out; }
+        .main-text { font-size: 1.2rem; line-height: 1.9; color: #cbd5e1; margin-bottom: 45px; font-weight: 300; }
+
+        .cyber-btn {
+            background: transparent; border: 1px solid rgba(255, 255, 255, 0.4); padding: 18px 50px;
+            color: white; cursor: pointer; font-weight: 600; letter-spacing: 2px; border-radius: 40px;
+            transition: all 0.4s ease; box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+            font-family: 'Montserrat', sans-serif;
+        }
+        .cyber-btn:hover { background: #ffffff; color: #050a19; box-shadow: 0 0 30px rgba(255, 255, 255, 0.8); transform: scale(1.05); }
+        .star-glow-effect { position: absolute; width: 700px; height: 700px; background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, rgba(133,163,255,0.02) 45%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: -1; animation: pulseGlow 5s infinite ease-in-out; }
+
+        /* ===== ОБЩИЕ НАСТРОЙКИ КАРТОЧЕК ===== */
+        .main-card {
+            background: rgba(6, 11, 25, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 750px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .glow-line { position: absolute; top: 0; left: 15%; width: 70%; height: 2px; background: linear-gradient(90deg, transparent, #85a3ff, transparent); box-shadow: 0 0 10px #85a3ff; }
+        .main-card h2 { font-size: 2.4rem; margin-bottom: 25px; letter-spacing: 1px; }
+
+        /* ===== НАСТРОЙКИ КАЖДОЙ КАРТОЧКИ НА КОМПЕ ===== */
+/* margin-top: отрицательный = вверх, положительный = вниз */
+
+/* Стихи */
+.poem-main-card {
+    max-width: 700px !important;
+    padding: 40px !important;
+    margin-top: 0 !important;       /* ← двигай здесь */
+}
+
+/* Громыч */
+.gromych-card {
+    max-width: 1050px !important;
+    padding: 40px !important;
+    margin-top: 0 !important;       /* ← двигай здесь */
+}
+
+/* Музыка */
+.music-card-albums {
+    max-width: 1280px !important;
+    width: 100%;
+    padding: 30px !important;
+    margin-top: 0 !important;       /* ← двигай здесь */
+}
+
+/* Квест */
+.quest-card {
+    max-width: 750px !important;
+    padding: 40px 35px !important;
+    text-align: center;
+    margin-top: 0 !important;       /* ← двигай здесь */
+}
+
+        /* СТИХИ */
+        .poem-tabs { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 15px; }
+        .poem-tab-btn { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); color: #9fa4b0; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; }
+        .poem-tab-btn:hover { color: #ffffff; border-color: rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.05); }
+        .poem-tab-btn.active-tab-btn { background: #ffffff; color: #060b19; border-color: #ffffff; box-shadow: 0 0 15px rgba(255, 255, 255, 0.4); }
+        .poem-scroll-box { max-height: 45vh; overflow-y: auto; padding-right: 15px; display: none; }
+        .active-poem-content { display: block !important; }
+        .poem-scroll-box::-webkit-scrollbar { width: 6px; }
+        .poem-scroll-box::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); border-radius: 10px; }
+        .poem-scroll-box::-webkit-scrollbar-thumb { background: rgba(133, 163, 255, 0.3); border-radius: 10px; }
+        .poem-block p { font-size: 1.4rem; line-height: 1.9; color: #ffffff; font-weight: 400; margin-bottom: 45px; text-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px rgba(255, 255, 255, 0.1); }
+        .poem-block-smaller p { font-size: 1.25rem; line-height: 1.8; }
+        .anti-quote-block { background: transparent; border: none; padding: 10px 0; margin-bottom: 45px; }
+        .anti-quote-block p { font-size: 1.4rem !important; font-weight: 400 !important; font-style: italic !important; color: #b9caff !important; text-shadow: 0 0 15px rgba(133, 163, 255, 0.3) !important; }
+        .placeholder-block { padding: 40px 20px; }
+        .star-icon-placeholder { font-size: 2.5rem; margin-bottom: 15px; animation: starPulse 2s infinite ease-in-out; }
+        .placeholder-block h3 { font-size: 1.3rem; margin-bottom: 10px; color: #e0e4ff; }
+        .placeholder-text { font-size: 0.95rem !important; color: #8fa0dd !important; font-style: normal !important; }
+
+        /* ОТ ГРОМЫЧА */
+        .gromych-content { display: grid; grid-template-columns: 320px 1fr; gap: 40px; align-items: center; }
+        .gromych-text-wrap { width: 100%; overflow: hidden; display: flex; flex-direction: column; }
+        .gromych-text-wrap h2 { text-align: left; margin-bottom: 25px; font-size: 2.4rem; background: linear-gradient(45deg, #ffffff, #b9caff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .gromych-scroll-text { max-height: 52vh; overflow-y: auto; padding-right: 20px; display: flex; flex-direction: column; }
+        .gromych-scroll-text::-webkit-scrollbar { width: 6px; }
+        .gromych-scroll-text::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.01); border-radius: 10px; }
+        .gromych-scroll-text::-webkit-scrollbar-thumb { background: rgba(133, 163, 255, 0.25); border-radius: 10px; }
+        .gromych-img-wrap { width: 100%; height: 55vh; display: flex; justify-content: center; align-items: center; overflow: visible; position: relative; }
+        .gromych-img { height: 100%; width: auto; object-fit: contain; display: block; transform: translateY(30px); filter: brightness(0.85) contrast(1.05) drop-shadow(0 0 25px rgba(255, 255, 255, 0.25)); }
+        .letter-body { text-align: justify; margin-bottom: 30px; }
+        .letter-body p { font-size: 1.15rem; line-height: 1.8; color: #cbd5e1; font-weight: 300; margin-bottom: 20px; }
+        .quote-trigger-btn { align-self: center; padding: 15px 40px !important; font-size: 0.9rem !important; font-weight: 600; letter-spacing: 2px; border-radius: 30px; border-color: rgba(133, 163, 255, 0.4) !important; box-shadow: 0 0 15px rgba(133, 163, 255, 0.15) !important; background: rgba(133, 163, 255, 0.02); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .quote-trigger-btn:hover { background: #ffffff !important; color: #060b19 !important; border-color: #ffffff !important; box-shadow: 0 0 30px rgba(255, 255, 255, 0.8) !important; transform: scale(1.03); }
+
+        /* МУЗЫКА */
+        .music-title { font-size: 2.2rem; margin-bottom: 6px; letter-spacing: 1px; text-align: center; background: linear-gradient(45deg, #ffffff, #b9caff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle-music { font-size: 0.9rem; color: #8fa0dd; margin-bottom: 20px; text-align: center; }
+        .music-layout { display: grid; grid-template-columns: 340px 1fr; gap: 25px; align-items: start; margin-top: 20px; }
+
+        .albums-panel { background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 14px; padding: 18px 14px; box-shadow: inset 0 0 15px rgba(133, 163, 255, 0.02); max-height: 70vh; overflow-y: auto; }
+        .albums-panel::-webkit-scrollbar { width: 6px; }
+        .albums-panel::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.01); border-radius: 10px; }
+        .albums-panel::-webkit-scrollbar-thumb { background: rgba(133, 163, 255, 0.25); border-radius: 10px; }
+        .panel-header { font-size: 0.8rem; font-weight: 700; color: #85a3ff; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; padding-left: 5px; text-shadow: 0 0 10px rgba(133, 163, 255, 0.2); }
+
+        .secret-block { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+.secret-btn {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #9fa4b0;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    box-shadow: none;
+}
+.secret-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    transform: scale(1.02);
+}
+.secret-btn.opened {
+    background: rgba(46, 213, 115, 0.08);
+    border-color: rgba(46, 213, 115, 0.3);
+    color: #6bd69a;
+    box-shadow: 0 0 15px rgba(46, 213, 115, 0.1);
+}
+.secret-btn.opened:hover {
+    background: rgba(46, 213, 115, 0.15);
+    border-color: rgba(46, 213, 115, 0.5);
+    box-shadow: 0 0 20px rgba(46, 213, 115, 0.2);
+    transform: scale(1.02);
+}
+
+        .albums-list { list-style: none; }
+        .album-item { padding: 10px 12px; border-radius: 10px; margin-bottom: 5px; cursor: pointer; border: 1px solid transparent; transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; position: relative; }
+        .album-item:hover { background: rgba(133, 163, 255, 0.05); border-color: rgba(133, 163, 255, 0.15); transform: translateX(3px); }
+        .album-item.active-album { background: rgba(133, 163, 255, 0.12); border-color: rgba(133, 163, 255, 0.4); box-shadow: 0 0 12px rgba(133, 163, 255, 0.15); }
+        .album-info { flex: 1; min-width: 0; }
+        .album-name { font-size: 0.85rem; color: #cbd5e1; font-weight: 600; letter-spacing: 0.3px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .active-album .album-name { color: #ffffff; text-shadow: 0 0 6px #ffffff; }
+        .album-meta { font-size: 0.68rem; color: #85a3ff; letter-spacing: 0.5px; margin-top: 2px; }
+        .active-album .album-meta { color: #b9caff; }
+        .album-fav-btn { background: transparent; border: none; font-size: 1rem; cursor: pointer; padding: 4px; opacity: 0.35; transition: all 0.25s ease; line-height: 1; }
+        .album-fav-btn:hover { opacity: 1; transform: scale(1.15); }
+        .album-fav-btn.is-fav { opacity: 1; filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.7)); }
+        .album-tracks-badge { font-size: 0.65rem; font-weight: 700; color: #85a3ff; background: rgba(133, 163, 255, 0.08); padding: 2px 7px; border-radius: 8px; border: 1px solid rgba(133, 163, 255, 0.15); }
+        .active-album .album-tracks-badge { color: #ffffff; background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.3); }
+
+        .tracks-section { display: flex; flex-direction: column; gap: 18px; max-height: 70vh; overflow-y: auto; padding-right: 5px; }
+        .tracks-section::-webkit-scrollbar { width: 6px; }
+        .tracks-section::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.01); border-radius: 10px; }
+        .tracks-section::-webkit-scrollbar-thumb { background: rgba(133, 163, 255, 0.25); border-radius: 10px; }
+
+        .player-controls { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px; padding: 18px 20px; position: sticky; top: 0; z-index: 5; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        #current-title { font-size: 0.95rem; font-weight: 600; color: #ffffff; display: block; margin-bottom: 12px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .control-buttons { display: flex; justify-content: center; align-items: center; gap: 18px; flex-wrap: wrap; }
+        .player-btn { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.2); width: 42px; height: 42px; border-radius: 50%; cursor: pointer; transition: all 0.3s ease; position: relative; }
+        .player-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: #ffffff; box-shadow: 0 0 12px rgba(255, 255, 255, 0.5); transform: scale(1.08); }
+        .play-btn { width: 50px; height: 50px; }
+        .prev-btn::before { content: ''; position: absolute; top: 50%; left: 52%; transform: translate(-50%, -50%); border-style: solid; border-width: 5px 7px 5px 0; border-color: transparent #ffffff transparent transparent; }
+        .prev-btn::after { content: ''; position: absolute; top: 50%; left: 40%; transform: translate(-50%, -50%); width: 2px; height: 10px; background-color: #ffffff; }
+        .next-btn::before { content: ''; position: absolute; top: 50%; left: 48%; transform: translate(-50%, -50%); border-style: solid; border-width: 5px 0 5px 7px; border-color: transparent transparent transparent #ffffff; }
+        .next-btn::after { content: ''; position: absolute; top: 50%; left: 60%; transform: translate(-50%, -50%); width: 2px; height: 10px; background-color: #ffffff; }
+        .play-btn.paused::before { content: ''; position: absolute; top: 50%; left: 54%; transform: translate(-50%, -50%); border-style: solid; border-width: 7px 0 7px 11px; border-color: transparent transparent transparent #ffffff; }
+        .play-btn.playing::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 3px; height: 14px; border-left: 3px solid #ffffff; border-right: 3px solid #ffffff; box-sizing: content-box; background: transparent; }
+
+        .queue-toggle-btn { font-size: 1rem; line-height: 1; display: flex; align-items: center; justify-content: center; padding: 0; }
+        .queue-toggle-btn.active-queue { background: rgba(133, 163, 255, 0.15); border-color: #85a3ff; box-shadow: 0 0 15px rgba(133, 163, 255, 0.5); }
+
+        .queue-panel { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.3s ease; background: rgba(255, 255, 255, 0.02); border-radius: 12px; margin-top: 0; }
+        .queue-panel.open { max-height: 400px; margin-top: 12px; border: 1px solid rgba(255, 255, 255, 0.06); overflow-y: auto; }
+        .queue-panel::-webkit-scrollbar { width: 5px; }
+        .queue-panel::-webkit-scrollbar-thumb { background: rgba(133, 163, 255, 0.25); border-radius: 4px; }
+        .queue-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); position: sticky; top: 0; background: rgba(8, 15, 36, 0.95); backdrop-filter: blur(10px); z-index: 2; }
+        .queue-header-title { font-size: 0.75rem; font-weight: 700; color: #85a3ff; letter-spacing: 2px; text-transform: uppercase; }
+        .queue-clear-btn { background: transparent; border: 1px solid rgba(255, 71, 87, 0.3); color: #ff6b6b; padding: 4px 10px; border-radius: 8px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-size: 0.65rem; font-weight: 600; letter-spacing: 1px; transition: all 0.25s ease; }
+        .queue-clear-btn:hover { background: #ff4757; color: #fff; border-color: #ff4757; }
+        .queue-list { list-style: none; padding: 8px; }
+        .queue-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; transition: all 0.25s ease; cursor: pointer; font-size: 0.85rem; }
+        .queue-item:hover { background: rgba(133, 163, 255, 0.06); }
+        .queue-item.current { background: rgba(255, 215, 0, 0.08); border-left: 3px solid #ffd700; padding-left: 9px; }
+        .queue-item.current .queue-item-name { color: #ffd700; font-weight: 700; text-shadow: 0 0 8px rgba(255, 215, 0, 0.4); }
+        .queue-item-num { font-size: 0.7rem; color: #85a3ff; font-weight: 700; width: 22px; flex-shrink: 0; }
+        .queue-item.current .queue-item-num { color: #ffd700; }
+        .queue-item-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+        .queue-item-name { color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .queue-item-album { font-size: 0.68rem; color: #6b7594; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .queue-playing-icon { color: #ffd700; font-size: 0.75rem; margin-left: auto; animation: queuePlayingPulse 1.2s infinite ease-in-out; }
+        @keyframes queuePlayingPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        .queue-empty { text-align: center; padding: 25px 15px; color: #6b7594; font-style: italic; font-size: 0.85rem; line-height: 1.6; }
+        .queue-empty-icon { font-size: 1.5rem; display: block; margin-bottom: 8px; opacity: 0.6; }
+
+        .volume-wrap { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 24px; padding: 4px 12px 4px 4px; transition: all 0.3s ease; }
+        .volume-wrap:hover { background: rgba(133, 163, 255, 0.05); border-color: rgba(133, 163, 255, 0.2); }
+        .volume-btn { font-size: 0.95rem; line-height: 1; display: flex; align-items: center; justify-content: center; padding: 0; width: 34px !important; height: 34px !important; flex-shrink: 0; }
+        .volume-btn.muted { background: rgba(255, 71, 87, 0.15); border-color: #ff4757; box-shadow: 0 0 12px rgba(255, 71, 87, 0.4); }
+        .volume-slider { -webkit-appearance: none; appearance: none; width: 80px; height: 4px; background: rgba(255, 255, 255, 0.12); border-radius: 2px; outline: none; cursor: pointer; flex-shrink: 0; }
+        .volume-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; background: #ffffff; border-radius: 50%; box-shadow: 0 0 10px rgba(255, 255, 255, 0.7); cursor: pointer; transition: all 0.2s ease; }
+        .volume-slider::-webkit-slider-thumb:hover { transform: scale(1.2); box-shadow: 0 0 14px rgba(255, 255, 255, 1); }
+        .volume-slider::-moz-range-thumb { width: 14px; height: 14px; background: #ffffff; border-radius: 50%; box-shadow: 0 0 10px rgba(255, 255, 255, 0.7); border: none; cursor: pointer; }
+
+        .progress-container { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; user-select: none; width: 100%; }
+        .progress-container span { font-size: 0.7rem; font-weight: 600; color: #8fa0dd; min-width: 30px; }
+        #current-time { text-align: left; }
+        #duration { text-align: right; }
+        .progress-bar { flex: 1; height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 2px; position: relative; cursor: pointer; transition: height 0.2s ease; }
+        .progress-bar:hover { height: 6px; }
+        .progress-fill { height: 100%; width: 0%; background: #ffffff; box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); border-radius: 2px; position: absolute; top: 0; left: 0; transition: width 0.1s linear; }
+
+        .playlist { list-style: none; text-align: left; }
+        .track-item { display: flex; align-items: center; padding: 10px 14px; border-radius: 10px; margin-bottom: 5px; cursor: pointer; border: 1px solid transparent; transition: all 0.3s ease; gap: 10px; }
+        .track-item:hover { background: rgba(133, 163, 255, 0.05); border-color: rgba(133, 163, 255, 0.15); transform: translateX(3px); }
+        .track-item.active-track { background: rgba(133, 163, 255, 0.12); border-color: rgba(133, 163, 255, 0.4); box-shadow: 0 0 12px rgba(133, 163, 255, 0.15); }
+        .track-num { font-size: 0.75rem; font-weight: 700; color: #85a3ff; width: 22px; flex-shrink: 0; }
+        .track-name { font-size: 0.9rem; color: #cbd5e1; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .active-track .track-name { color: #ffffff; text-shadow: 0 0 6px #ffffff; }
+        .track-stats { font-size: 0.72rem; font-weight: 600; color: #85a3ff; background: rgba(133, 163, 255, 0.05); padding: 3px 9px; border-radius: 10px; border: 1px solid rgba(133, 163, 255, 0.1); flex-shrink: 0; }
+        .active-track .track-stats { color: #ffffff; background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.3); }
+        .track-fav-btn { background: transparent; border: none; font-size: 0.95rem; cursor: pointer; padding: 3px 5px; opacity: 0.3; transition: all 0.25s ease; line-height: 1; flex-shrink: 0; }
+        .track-fav-btn:hover { opacity: 1; transform: scale(1.15); }
+        .track-fav-btn.is-fav { opacity: 1; filter: drop-shadow(0 0 6px rgba(255, 71, 87, 0.7)); }
+
+        .album-tracks-wrap { background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 14px; padding: 16px 18px; }
+        .album-tracks-header { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 12px; margin-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); gap: 10px; }
+        #current-album-name { font-size: 1.05rem; font-weight: 700; color: #ffffff; letter-spacing: 0.5px; background: linear-gradient(45deg, #ffffff, #b9caff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .album-tracks-count { font-size: 0.7rem; color: #85a3ff; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; flex-shrink: 0; }
+        .album-empty { text-align: center; color: #6b7594; font-size: 0.85rem; padding: 25px 15px; font-style: italic; line-height: 1.7; }
+
+        .favorites-block { background: linear-gradient(135deg, rgba(255, 215, 0, 0.04), rgba(255, 71, 87, 0.02)); border: 1px solid rgba(255, 215, 0, 0.15); border-radius: 14px; padding: 16px 18px; }
+        .favorites-header { font-size: 0.8rem; font-weight: 700; color: #ffd700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 215, 0, 0.1); text-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+
+        .easter-egg-container { max-height: 0; opacity: 0; overflow: hidden; transform: scale(0.9) translateY(-20px); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin: 0 auto; text-align: center; }
+        .easter-egg-container.show-art { max-height: 320px; opacity: 1; transform: scale(1) translateY(0); margin-bottom: 20px; }
+        .easter-egg-img { max-width: 150px; height: auto; border-radius: 12px; border: 2px solid rgba(255, 100, 100, 0.15); box-shadow: 0 0 25px rgba(255, 100, 100, 0.15); }
+        .easter-egg-caption { font-size: 0.8rem; font-weight: 700; color: #ff6b6b; letter-spacing: 3px; margin-top: 8px; text-shadow: 0 0 10px rgba(255, 107, 107, 0.4); }
+
+        /* SHUFFLE */
+        .shuffle-btn { font-size: 1.1rem; line-height: 1; display: flex; align-items: center; justify-content: center; padding: 0; }
+        .shuffle-btn.active-shuffle { background: rgba(255, 215, 0, 0.15); border-color: #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); color: #ffd700; }
+        .shuffle-modal-card { max-width: 560px !important; text-align: left !important; }
+        .shuffle-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .shuffle-option { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px; cursor: pointer; transition: all 0.3s ease; }
+        .shuffle-option:hover { background: rgba(133, 163, 255, 0.05); border-color: rgba(133, 163, 255, 0.2); }
+        .shuffle-option input[type="radio"] { margin-top: 4px; accent-color: #85a3ff; cursor: pointer; }
+        .shuffle-option-label { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+        .shuffle-option-label strong { font-size: 0.95rem; color: #cbd5e1; font-weight: 600; }
+        .shuffle-option-label small { font-size: 0.75rem; color: #8fa0dd; line-height: 1.4; }
+        .shuffle-albums-picker { display: none; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px; padding: 14px; margin-bottom: 20px; }
+        .shuffle-albums-picker.open { display: block; }
+        .shuffle-picker-actions { display: flex; gap: 8px; margin-bottom: 10px; }
+        .mini-btn { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); color: #8fa0dd; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.5px; transition: all 0.25s ease; }
+        .mini-btn:hover { background: rgba(133, 163, 255, 0.1); color: #ffffff; border-color: rgba(133, 163, 255, 0.3); }
+        .shuffle-albums-list { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; padding-right: 6px; }
+        .shuffle-albums-list::-webkit-scrollbar { width: 5px; }
+        .shuffle-albums-list::-webkit-scrollbar-thumb { background: rgba(133,163,255,0.25); border-radius: 4px; }
+        .shuffle-album-check { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 0.85rem; color: #cbd5e1; }
+        .shuffle-album-check:hover { background: rgba(133, 163, 255, 0.06); }
+        .shuffle-album-check input[type="checkbox"] { accent-color: #85a3ff; cursor: pointer; flex-shrink: 0; }
+        .shuffle-album-check .sh-album-count { margin-left: auto; font-size: 0.7rem; color: #85a3ff; background: rgba(133, 163, 255, 0.08); padding: 2px 8px; border-radius: 8px; flex-shrink: 0; }
+        .shuffle-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .shuffle-start-btn { padding: 14px 35px !important; font-size: 0.85rem !important; letter-spacing: 2px !important; background: rgba(255, 215, 0, 0.06) !important; border-color: rgba(255, 215, 0, 0.4) !important; color: #ffd700 !important; }
+        .shuffle-start-btn:hover { background: #ffd700 !important; color: #060b19 !important; border-color: #ffd700 !important; box-shadow: 0 0 25px rgba(255, 215, 0, 0.6) !important; }
+        .shuffle-stop-btn { padding: 14px 35px !important; font-size: 0.85rem !important; letter-spacing: 2px !important; border-color: rgba(255, 71, 87, 0.4) !important; color: #ff6b6b !important; }
+        .shuffle-stop-btn:hover { background: #ff4757 !important; color: #ffffff !important; border-color: #ff4757 !important; box-shadow: 0 0 25px rgba(255, 71, 87, 0.6) !important; }
+
+        /* МОДАЛКА */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 7, 18, 0.65); backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 20px; opacity: 0; pointer-events: none; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .modal-overlay.modal-open { opacity: 1; pointer-events: auto; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
+        .modal-body-card { background: rgba(8, 15, 36, 0.9); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; padding: 45px 35px 35px 35px; max-width: 600px; width: 100%; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8); position: relative; text-align: center; transform: scale(0.85) translateY(30px); transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .modal-overlay.modal-open .modal-body-card { transform: scale(1) translateY(0); }
+        .close-modal-btn { position: absolute; top: 20px; right: 25px; background: transparent; border: none; color: #9fa4b0; font-size: 1.4rem; cursor: pointer; transition: all 0.2s ease; padding: 5px; }
+        .close-modal-btn:hover { color: #ff4757; transform: scale(1.1); }
+        .modal-body-card h3 { font-size: 1.8rem; margin-bottom: 8px; letter-spacing: 1px; }
+        .modal-subtitle { font-size: 0.9rem; color: #8fa0dd; margin-bottom: 25px; letter-spacing: 1px; }
+        .modal-quotes-scroll { max-height: 45vh; overflow-y: auto; padding-right: 12px; }
+        .modal-quotes-scroll::-webkit-scrollbar { width: 5px; }
+        .modal-quotes-scroll::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.01); border-radius: 10px; }
+        .modal-quotes-scroll::-webkit-scrollbar-thumb { background: rgba(133, 163, 255, 0.25); border-radius: 10px; }
+        .quotes-grid { display: flex; flex-direction: column; gap: 15px; width: 100%; }
+        .quote-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 16px 20px; text-align: left; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: inset 0 0 15px rgba(133, 163, 255, 0.01); }
+        .quote-card:hover { background: rgba(133, 163, 255, 0.03); border-color: rgba(133, 163, 255, 0.2); box-shadow: 0 0 20px rgba(133, 163, 255, 0.1); transform: translateX(4px); }
+        .quote-source { display: block; font-size: 0.75rem; font-weight: 700; color: #85a3ff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+        .quote-card p { font-size: 0.95rem; line-height: 1.6; color: #e2e8f0; font-style: italic; font-weight: 300; }
+        .special-quote-card { background: rgba(255, 215, 0, 0.03) !important; border-color: rgba(255, 215, 0, 0.2) !important; border-left: 4px solid #ffd700 !important; box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.05) !important; }
+        .special-quote-card:hover { background: rgba(255, 215, 0, 0.06) !important; border-color: #ffd700 !important; box-shadow: 0 0 25px rgba(255, 215, 0, 0.35), inset 0 0 20px rgba(255, 215, 0, 0.1) !important; transform: translateX(6px) !important; }
+        .special-quote-card .quote-source { color: #ffd700 !important; font-weight: 700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5) !important; }
+        .special-quote-card p { font-size: 1.05rem !important; color: #ffffff !important; font-weight: 400 !important; line-height: 1.6; text-shadow: 0 0 8px rgba(255, 255, 255, 0.2) !important; }
+
+        /* КВЕСТ */
+        .quest-progress-wrap { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .quest-progress-text { font-size: 0.75rem; color: #85a3ff; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-bottom: 10px; }
+        .quest-progress-bar { height: 4px; background: rgba(255, 255, 255, 0.08); border-radius: 2px; overflow: hidden; }
+        .quest-progress-fill { height: 100%; width: 14%; background: linear-gradient(90deg, #85a3ff, #ffd700); box-shadow: 0 0 10px rgba(133, 163, 255, 0.5); border-radius: 2px; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        .quest-step { animation: questStepIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        @keyframes questStepIn { from { opacity: 0; transform: translateY(20px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+        .quest-question-text { font-size: 1.5rem; line-height: 1.4; margin-bottom: 25px; color: #ffffff; font-weight: 600; }
+        .quest-options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        .quest-opt-btn { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); color: #ffffff; padding: 16px 20px; border-radius: 12px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 400; transition: all 0.3s ease; text-align: left; }
+        .quest-opt-btn:hover:not(:disabled) { background: rgba(133, 163, 255, 0.08); border-color: rgba(133, 163, 255, 0.4); transform: translateX(5px); }
+        .quest-opt-btn:disabled { cursor: default; }
+        .quest-opt-btn.correct-ans { background: rgba(46, 213, 115, 0.15) !important; border-color: #2ed573 !important; box-shadow: 0 0 20px rgba(46, 213, 115, 0.3); color: #2ed573 !important; font-weight: 600; }
+        .quest-opt-btn.wrong-ans { background: rgba(255, 71, 87, 0.15) !important; border-color: #ff4757 !important; box-shadow: 0 0 20px rgba(255, 71, 87, 0.3); color: #ff4757 !important; }
+
+        .quest-feedback { font-size: 0.9rem; min-height: 22px; letter-spacing: 0.5px; margin-bottom: 15px; transition: all 0.3s ease; }
+        .quest-feedback.success { color: #2ed573; text-shadow: 0 0 10px rgba(46, 213, 115, 0.5); }
+        .quest-feedback.error { color: #ff4757; text-shadow: 0 0 10px rgba(255, 71, 87, 0.5); }
+
+        /* Wordle */
+        .wordle-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+        .wordle-hint { font-size: 0.85rem; color: #8fa0dd; margin-bottom: 5px; line-height: 1.5; }
+        .wordle-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; max-width: 280px; width: 100%; }
+        .wordle-cell { aspect-ratio: 1/1; background: rgba(255, 255, 255, 0.02); border: 2px solid rgba(255, 255, 255, 0.12); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; color: #ffffff; text-transform: uppercase; transition: all 0.3s ease; }
+        .wordle-cell.filled { border-color: rgba(255, 255, 255, 0.4); animation: cellPop 0.15s ease; }
+        @keyframes cellPop { 0% { transform: scale(0.85); } 100% { transform: scale(1); } }
+        .wordle-cell.correct { background: rgba(46, 213, 115, 0.85); border-color: #2ed573; color: #ffffff; box-shadow: 0 0 15px rgba(46, 213, 115, 0.4); }
+        .wordle-cell.present { background: rgba(255, 193, 7, 0.85); border-color: #ffc107; color: #ffffff; box-shadow: 0 0 15px rgba(255, 193, 7, 0.4); }
+        .wordle-cell.absent { background: rgba(60, 60, 75, 0.85); border-color: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.6); }
+        .wordle-cell.shake { animation: wordleShake 0.4s ease; }
+        @keyframes wordleShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+        .wordle-keyboard { display: flex; flex-direction: column; gap: 6px; max-width: 420px; width: 100%; }
+        .wordle-kb-row { display: flex; gap: 4px; justify-content: center; }
+        .wordle-key { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); color: #ffffff; border-radius: 6px; padding: 10px 0; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; cursor: pointer; flex: 1; min-width: 0; transition: all 0.15s ease; user-select: none; }
+        .wordle-key:hover { background: rgba(133, 163, 255, 0.15); }
+        .wordle-key:active { transform: scale(0.95); }
+        .wordle-key.wide { flex: 1.5; font-size: 0.75rem; }
+        .wordle-key.correct { background: rgba(46, 213, 115, 0.7); border-color: #2ed573; }
+        .wordle-key.present { background: rgba(255, 193, 7, 0.7); border-color: #ffc107; }
+        .wordle-key.absent { background: rgba(60, 60, 75, 0.6); border-color: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.5); }
+
+        /* Провода */
+        .wires-wrap { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .wires-hint { font-size: 0.85rem; color: #8fa0dd; margin-bottom: 5px; line-height: 1.5; text-align: center; }
+        .wires-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; max-width: 340px; width: 100%; padding: 8px; background: rgba(0, 0, 0, 0.3); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.06); touch-action: none; user-select: none; }
+        .wire-cell { aspect-ratio: 1/1; background: rgba(255, 255, 255, 0.02); border-radius: 6px; position: relative; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s ease; }
+        .wire-cell:hover { background: rgba(255, 255, 255, 0.06); }
+        .wire-dot { width: 60%; height: 60%; border-radius: 50%; position: relative; z-index: 2; box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3), 0 0 10px currentColor; }
+        .wire-cell.filled { box-shadow: inset 0 0 0 2px currentColor; background: rgba(255, 255, 255, 0.02); }
+        .wires-actions { margin-top: 10px; display: flex; gap: 10px; }
+
+        /* Игра "Собери слово" */
+        .wordbuild-wrap { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .wordbuild-hint {
+            font-size: 0.95rem;
+            color: #b9caff;
+            font-style: italic;
+            text-align: center;
+            line-height: 1.6;
+            padding: 10px 16px;
+            background: rgba(133, 163, 255, 0.06);
+            border: 1px solid rgba(133, 163, 255, 0.15);
+            border-radius: 10px;
+            margin-bottom: 5px;
+        }
+        .wordbuild-answer {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            flex-wrap: wrap;
+            min-height: 60px;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            margin-bottom: 5px;
+            align-items: center;
+        }
+        .wordbuild-answer-slot {
+            width: 42px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 2px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            transition: all 0.25s ease;
+            cursor: pointer;
+        }
+        .wordbuild-answer-slot.filled {
+            background: rgba(133, 163, 255, 0.15);
+            border-style: solid;
+            border-color: rgba(133, 163, 255, 0.5);
+            box-shadow: 0 0 12px rgba(133, 163, 255, 0.2);
+        }
+        .wordbuild-answer-slot.correct {
+            background: rgba(46, 213, 115, 0.2);
+            border-color: #2ed573;
+            color: #2ed573;
+            box-shadow: 0 0 15px rgba(46, 213, 115, 0.4);
+        }
+        .wordbuild-letters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            max-width: 500px;
+            padding: 10px;
+        }
+        .wordbuild-letter {
+            width: 46px;
+            height: 46px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+        .wordbuild-letter:hover { background: rgba(133, 163, 255, 0.2); border-color: rgba(133, 163, 255, 0.4); transform: scale(1.08); }
+        .wordbuild-letter:active { transform: scale(0.95); }
+        .wordbuild-letter.used { opacity: 0.25; pointer-events: none; }
+        .wordbuild-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
+
+        /* Финал */
+        .quest-final { text-align: center; padding: 20px 0; }
+        .quest-final .star-icon-placeholder { font-size: 4rem; margin-bottom: 20px; }
+        .quest-final h2 { font-size: 2rem; margin-bottom: 15px; background: linear-gradient(45deg, #ffffff, #ffd700, #ffffff); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: textShimmer 3s linear infinite; }
+        .quest-final p { font-size: 1.1rem; color: #cbd5e1; line-height: 1.7; margin-bottom: 15px; }
+        .quest-final .highlight { font-size: 1.3rem; font-weight: 600; display: inline-block; margin: 15px 0; }
+        .quest-reset-btn { margin-top: 25px; padding: 12px 30px !important; font-size: 0.8rem !important; letter-spacing: 2px !important; border-color: rgba(255, 255, 255, 0.2) !important; }
+
+        /* Конфетти */
+        .confetti-piece { position: fixed; width: 10px; height: 10px; top: -20px; z-index: 9999; pointer-events: none; animation: confettiFall 3s linear forwards; }
+        @keyframes confettiFall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+
+        /* ЭКРАН-ЗАМОК */
+        .lock-overlay { position: fixed; inset: 0; z-index: 5000; display: flex; justify-content: center; align-items: center; padding: 20px; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s; }
+        .lock-overlay.unlocked { opacity: 0; visibility: hidden; pointer-events: none; }
+        .lock-card { background: rgba(8, 15, 36, 0.9); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; padding: 50px 40px 40px; max-width: 480px; width: 100%; text-align: center; position: relative; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9); animation: lockCardIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        @keyframes lockCardIn { from { transform: scale(0.9) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+        .lock-icon { font-size: 2.5rem; margin-bottom: 15px; animation: starPulse 2.5s infinite ease-in-out; display: inline-block; }
+        .lock-card h2 { font-size: 1.8rem; margin-bottom: 10px; letter-spacing: 1px; background: linear-gradient(45deg, #ffffff, #b9caff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .lock-subtitle { font-size: 0.95rem; color: #8fa0dd; margin-bottom: 30px; line-height: 1.6; }
+        .lock-input-wrap { display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; }
+        .lock-input { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 40px; padding: 16px 25px; color: #ffffff; font-family: 'Montserrat', sans-serif; font-size: 1rem; letter-spacing: 3px; text-align: center; outline: none; transition: all 0.3s ease; }
+        .lock-input::placeholder { color: #6b7594; letter-spacing: 1px; }
+        .lock-input:focus { border-color: #85a3ff; box-shadow: 0 0 20px rgba(133, 163, 255, 0.3); background: rgba(133, 163, 255, 0.05); }
+        .lock-input.shake { animation: inputShake 0.4s ease; border-color: #ff4757 !important; }
+        @keyframes inputShake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-10px); } 40% { transform: translateX(10px); } 60% { transform: translateX(-6px); } 80% { transform: translateX(6px); } }
+        .lock-btn { padding: 16px 40px !important; font-size: 0.9rem !important; letter-spacing: 3px; }
+        .lock-error { color: #ff4757; font-size: 0.85rem; min-height: 20px; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255, 71, 87, 0.5); transition: all 0.3s ease; }
+        .lock-hint { font-size: 0.75rem; color: #6b7594; margin-top: 20px; font-style: italic; letter-spacing: 0.5px; }
+        .dev-skip-btn { position: absolute; bottom: 8px; right: 10px; width: 16px; height: 16px; border-radius: 50%; background: transparent; border: 1px solid rgba(255, 255, 255, 0.08); color: transparent; cursor: pointer; transition: all 0.3s ease; font-size: 0; padding: 0; line-height: 1; }
+        .dev-skip-btn:hover { background: rgba(255, 71, 87, 0.2); border-color: rgba(255, 71, 87, 0.5); box-shadow: 0 0 10px rgba(255, 71, 87, 0.4); }
+
+        body.locked { overflow: hidden; }
+        body.locked .navbar, body.locked .page-container { filter: blur(8px); pointer-events: none; user-select: none; }
+
+        @keyframes textShimmer { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
+        @keyframes logoShimmer { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
+        @keyframes neonPulse { 0%, 100% { filter: drop-shadow(0 0 10px rgba(133, 163, 255, 0.2)); } 50% { filter: drop-shadow(0 0 25px rgba(133, 163, 255, 0.5)) brightness(1.1); } }
+        @keyframes logoGlowPulse { 0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5)); } 50% { filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.8)) scale(1.02); } }
+        @keyframes starPulse { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8)); } 50% { transform: scale(1.1); filter: drop-shadow(0 0 15px rgba(255, 255, 255, 1)); } }
+        @keyframes pulseGlow { 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; } 50% { transform: translate(-50%, -50%) scale(1.08); opacity: 0.5; } }
+
+        @media (max-width: 1100px) {
+            body { overflow-y: auto !important; height: auto !important; padding-top: 130px; }
+            .page-container { position: relative !important; top: 0 !important; height: auto !important; min-height: calc(100vh - 130px); padding: 20px 10px 80px !important; display: none !important; overflow: visible !important; }
+            .page-container.active-page { display: block !important; }
+            .navbar { padding: 12px 15px !important; flex-direction: column; gap: 10px; position: fixed !important; background: rgba(6, 11, 25, 0.9); }
+            .nav-logo { font-size: 1.05rem !important; letter-spacing: 2px !important; }
+            .logo-star { width: 22px !important; height: 22px !important; }
+            .nav-links { display: flex !important; width: 100%; justify-content: space-between; gap: 5px !important; overflow-x: auto; padding-bottom: 2px; }
+            .nav-links li { flex: 1; text-align: center; min-width: 60px; }
+            .nav-links a { display: block; font-size: 0.6rem !important; padding: 8px 4px !important; border: 1px solid rgba(255, 255, 255, 0.05); background: rgba(255, 255, 255, 0.02); border-radius: 8px; letter-spacing: 0px !important; white-space: nowrap; }
+            .nav-links a.active { background: #ffffff !important; color: #060b19 !important; box-shadow: 0 0 10px rgba(255, 255, 255, 0.3); }
+            .nav-links a::after { display: none !important; }
+
+            h1 { font-size: 2.3rem !important; line-height: 1.2 !important; }
+            .main-text { font-size: 0.95rem !important; line-height: 1.6 !important; }
+            .star-glow-effect { width: 300px; height: 300px; }
+            #home-page { align-items: flex-start !important; padding-top: 5px !important; }
+            .hero-content { padding: 0 0 20px 0; }
+
+            .poem-tabs { flex-direction: column; gap: 8px; }
+            .poem-tab-btn { font-size: 0.8rem !important; padding: 10px 14px !important; width: 100%; }
+            .poem-block p { font-size: 1rem !important; line-height: 1.7 !important; margin-bottom: 30px !important; }
+            .poem-block-smaller p { font-size: 0.9rem !important; line-height: 1.65 !important; }
+            .anti-quote-block p { font-size: 1rem !important; }
+            .poem-scroll-box { max-height: none !important; overflow: visible !important; padding-right: 0 !important; }
+
+            .gromych-content { grid-template-columns: 1fr !important; gap: 20px !important; text-align: center; }
+            .gromych-img-wrap { height: 40vh !important; overflow: hidden !important; }
+            .gromych-img { transform: translateY(0) !important; height: 100% !important; }
+            .gromych-text-wrap h2 { text-align: center !important; font-size: 1.8rem !important; }
+            .gromych-scroll-text { max-height: none !important; overflow: visible !important; padding-right: 0 !important; }
+            .letter-body p { text-align: center !important; font-size: 1rem !important; }
+
+            .music-card-albums { padding: 20px 12px !important; max-width: 100% !important; }
+            .music-title { font-size: 1.6rem !important; }
+            .music-layout { grid-template-columns: 1fr !important; gap: 15px !important; margin-top: 15px; min-width: 0 !important; width: 100% !important; }
+            .albums-panel { max-height: none !important; padding: 12px !important; border-radius: 12px !important; overflow: visible !important; min-width: 0 !important; width: 100% !important; }
+            .albums-list { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; overflow-x: auto !important; overflow-y: hidden !important; gap: 8px !important; padding-bottom: 8px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; width: 100% !important; max-width: 100% !important; }
+            .albums-list::-webkit-scrollbar { height: 4px; }
+            .albums-list::-webkit-scrollbar-thumb { background: rgba(133,163,255,0.3); border-radius: 2px; }
+            .album-item { flex: 0 0 200px !important; width: 200px !important; min-width: 200px !important; max-width: 200px !important; scroll-snap-align: start; margin-bottom: 0 !important; flex-direction: column; align-items: flex-start; gap: 4px; position: relative; padding: 12px 14px !important; }
+            .album-item .album-fav-btn { position: absolute; top: 8px; right: 8px; }
+            .album-tracks-badge { display: none; }
+            .album-meta { font-size: 0.68rem; }
+            .album-name { white-space: normal !important; font-size: 0.82rem; line-height: 1.3; }
+
+            .tracks-section { max-height: none !important; overflow: visible !important; padding-right: 0 !important; display: flex; flex-direction: column; gap: 15px; min-width: 0 !important; width: 100% !important; }
+            .album-tracks-wrap, .favorites-block { overflow: visible !important; max-height: none !important; }
+            .player-controls { position: static !important; }
+            .player-btn { width: 44px !important; height: 44px !important; }
+            .play-btn { width: 52px !important; height: 52px !important; }
+            .control-buttons { gap: 12px !important; }
+            .track-item { padding: 14px 12px !important; gap: 8px; }
+            .track-name { font-size: 0.85rem; }
+            .track-stats { font-size: 0.68rem; padding: 2px 7px; }
+            #current-album-name { font-size: 0.95rem !important; }
+
+            .volume-wrap { padding: 3px 8px 3px 3px; gap: 6px; }
+            .volume-btn { width: 32px !important; height: 32px !important; }
+            .volume-slider { width: 60px; }
+            .queue-panel.open { max-height: 300px; }
+
+            .main-card { padding: 25px 15px !important; }
+            .modal-body-card { padding: 30px 15px !important; }
+            .modal-body-card h3 { font-size: 1.4rem !important; }
+            .modal-quotes-scroll { max-height: 55vh !important; }
+            .quote-card p { font-size: 0.85rem !important; }
+
+            .lock-card { padding: 35px 20px 30px !important; }
+            .lock-card h2 { font-size: 1.5rem !important; }
+            .lock-input { padding: 18px 22px !important; font-size: 1.05rem !important; }
+            .lock-btn { padding: 18px 35px !important; }
+
+            .quest-card { padding: 25px 15px !important; }
+            .quest-question-text { font-size: 1.15rem !important; }
+            .quest-opt-btn { padding: 14px 16px !important; font-size: 0.9rem !important; }
+            .wordle-grid { max-width: 240px; }
+            .wordle-cell { font-size: 1.2rem; }
+            .wordle-key { padding: 9px 0; font-size: 0.8rem; }
+            .wordle-key.wide { font-size: 0.7rem; }
+            .wires-grid { max-width: 300px; }
+
+            .wordbuild-answer { gap: 4px; padding: 8px 10px; }
+            .wordbuild-answer-slot { width: 36px; height: 44px; font-size: 1.2rem; }
+            .wordbuild-letter { width: 40px; height: 40px; font-size: 1.1rem; }
+            .wordbuild-letters { gap: 6px; padding: 6px; }
+
+            .shuffle-modal-card { padding: 25px 15px !important; }
+            .shuffle-btn { width: 44px !important; height: 44px !important; font-size: 1rem !important; }
+            .shuffle-albums-list { max-height: 160px; }
+            .shuffle-option { padding: 12px 14px; }
+            .shuffle-option-label strong { font-size: 0.88rem; }
+            .shuffle-option-label small { font-size: 0.7rem; }
+
+            /* ===== НАСТРОЙКИ КАЖДОЙ КАРТОЧКИ НА МОБИЛКЕ ===== */
+/* margin-top: отрицательный = вверх, положительный = вниз */
+
+/* Стихи */
+.poem-main-card {
+    margin-top: -60px !important;       /* ← двигай здесь */
+}
+
+/* Громыч */
+.gromych-card {
+    margin-top: -60px !important;       /* ← двигай здесь */
+}
+
+/* Музыка */
+.music-card-albums {
+    margin-top: -60px !important;       /* ← двигай здесь */
+}
+
+/* Квест */
+.quest-card {
+    margin-top: -60px !important;       /* ← двигай здесь */
+}
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.9rem !important; }
+            .top-tag { font-size: 0.7rem !important; letter-spacing: 3px !important; }
+            .main-text { font-size: 0.9rem !important; }
+            .cyber-btn { padding: 15px 35px !important; font-size: 0.85rem !important; }
+            .music-title { font-size: 1.35rem !important; }
+            .nav-links a { font-size: 0.55rem !important; padding: 7px 2px !important; }
+            .wordbuild-letter { width: 36px; height: 36px; font-size: 1rem; }
+            .wordbuild-answer-slot { width: 32px; height: 40px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body class="locked">
+
+    <canvas id="starsCanvas"></canvas>
+
+    <div id="lock-screen" class="lock-overlay">
+        <div class="lock-card">
+            <h2>Вход воспрещен</h2>
+            <p class="lock-subtitle">Нужен секретный пароль UwU</p>
+            <div class="lock-input-wrap">
+                <input type="password" id="lock-input" class="lock-input" placeholder="Введите пароль" autocomplete="off">
+                <button id="lock-submit" class="cyber-btn lock-btn">ОТКРЫТЬ</button>
+            </div>
+            <p id="lock-error" class="lock-error"></p>
+            <p class="lock-hint">Пароль отправлял в тг, хехе</p>
+            <button id="dev-skip-btn" class="dev-skip-btn" title="Admin skip">·</button>
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-logo" onclick="showPage('home-page')">DAENERYS 
+            <img src="white_star.png" alt="star" class="logo-star">
+        </div>
+        <ul class="nav-links">
+            <li><a href="javascript:void(0)" id="link-home" class="nav-item active" onclick="showPage('home-page')">Главная</a></li>
+            <li><a href="javascript:void(0)" id="link-poems" class="nav-item" onclick="showPage('poems-page')">Стихи</a></li>
+            <li><a href="javascript:void(0)" id="link-gromych" class="nav-item" onclick="showPage('gromych-page')">Громыч</a></li>
+            <li><a href="javascript:void(0)" id="link-music" class="nav-item" onclick="showPage('music-page')">Музыка</a></li>
+            <li><a href="javascript:void(0)" id="link-quiz" class="nav-item" onclick="showPage('quest-page')">Квест</a></li>
+        </ul>
+    </nav>
+
+    <div id="home-page" class="page-container active-page">
+        <div class="hero-content">
+            <div class="hero-text-block">
+                <h1>С ДНЕМ<br><span class="highlight">РОЖДЕНИЯ!</span></h1>
+                <p class="main-text">
+                    Приветик ^_^<br>
+                    Вообще-то, к подарку я решил подойти немного творчески...<br><br>
+                    На первом курсе у нас были Web-технологии,<br>
+                    и мне понравилось делать сайты.<br>
+                    Я решил совместить приятное с полезным - и написал сайтик.<br><br>
+                    Получилось как-то так. Смотри и пользуйся 🤍<br><br>
+                    <span style="font-size: 0.85em; color: #8fa0dd; font-style: italic;">Upd: начало работы - 14 мая 2026</span>
+                </p>
+            </div>
+            <div class="star-glow-effect"></div>
+        </div>
+    </div>
+
+    <div id="poems-page" class="page-container">
+        <div class="main-card poem-main-card">
+            <div class="poem-tabs">
+                <button id="tab-btn-1" class="poem-tab-btn active-tab-btn" onclick="switchPoem(1)">Наше знакомство</button>
+                <button id="tab-btn-2" class="poem-tab-btn" onclick="switchPoem(2)">С Днём Рождения (2026)</button>
+            </div>
+
+            <div id="poem-content-1" class="poem-scroll-box active-poem-content">
+                <div class="poem-block">
+                    <p>Буду честен, было страшно<br>Я смотрел "туда" с опаской<br>Но на деле все потрясно<br>Познакомился я с Васькой</p>
+                    <p>Много обо мне узнала<br>И о вузе рассказала<br>Благодарен я тебе<br>И подаренной судьбе</p>
+                    <p>Ты советом помогала<br>И в беде не оставляла<br>Ты кружочки отправляла<br>И меня воодушевляла</p>
+                    <p>Узнавая тебя всё сильней и сильней,<br>С каждым фактом всё больше дивился —<br>Кто-то смелостью мир покорил,<br>И твой дух меня поразил.</p>
+                    <p>Ты решительна, умна<br>И, бесспорно, ты крута!<br>Вдохновления полна,<br>И в делах своих обвита.</p>
+                    <p>Девушка в игре крута,<br>Хитра, коварна и мудра.<br>Речь безупречно ты произнесла,<br>И меня в плен забрала</p>
+                    <div class="anti-quote-block">
+                        <p>"Ну что ж, сегодня я была там,<br>Где Слава КПСС – всем богам!<br>В толпе таких же, как и я,<br>С глазами, полными огня"</p>
+                    </div>
+                    <p>В твоих глазах – рассвет, что будит ото сна,<br>В твоей улыбке – нежность, что всегда нужна.<br>Ты – мой компас верный в жизненном пути,<br>С тобой я готов любые горы перейти.<br>И в миг триумфа, и когда душа болит,<br>Твоё присутствие мне силы дарит, исцелит.<br>Я уважаю в тебе и мудрость, и порыв,<br>Мой мир с тобой полон, я с тобой по-настоящему жив.</p>
+                </div>
+            </div>
+
+            <div id="poem-content-2" class="poem-scroll-box">
+                <div class="poem-block poem-block-smaller">
+                    <p>Сегодня день, когда зажглась звезда,<br>И мир узнал девчонку неземную!<br>Судьбе спасибо говорю всегда<br>За то, что знаю Ваську - вот такую!</p>
+                    <p>С тобой любой денёк летит быстрей,<br>Твои советы - просто ведь спасение.<br>Из сотен тысяч разных новостей<br>Твои кружочки поднимают настроение.</p>
+                    <p>Ты так умна, начитанна, прекрасна,<br>Твой мир наполнен магией страниц.<br>И лепишь ты зверушек не напрасно -<br>Твой дар творить не ведает границ!</p>
+                    <p>С тобой так просто обо всём поговорить,<br>Ты выслушаешь, если вдруг тоска.<br>Умеешь ты и делом поддержать, и рассмешить,<br>И мне твоя поддержка так близка.</p>
+                    <p>Я рад, что в моей жизни есть твой свет,<br>Что мы общаемся, смеемся и грустим.<br>Лови в свой день рождения мой большой привет -<br>Ты супер, Васька, и твой дух неповторим!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="gromych-page" class="page-container">
+        <div class="main-card gromych-card">
+            <div class="gromych-content">
+                <div class="gromych-img-wrap">
+                    <img src="daenerys.png" alt="Громыч" class="gromych-img">
+                </div>
+                <div class="gromych-text-wrap">
+                    <h2>От Громыча</h2>
+                    <div class="gromych-scroll-text">
+                        <div class="letter-body">
+                            <p>Большой-большой привет тебе, Василиса! Я от всей души поздравляю тебя с днем рождения! Ты невероятный человек, очень добрый и всегда поддерживающий, таких в мире по пальцам сосчитать можно.</p>
+                            <p>Хочу пожелать тебе всего самого наилучшего: гармонии в душе, успехов в учебе, отсутствия проблем со здоровьем, как физическим так и ментальным. Я невероятно счастлив, что познакомился с тобой, общался и играл в мафию. Хочу поблагодарить тебя за все сказанные слова, записанные кружки, поставленные реакции — за то, что ты слушала меня, поддерживала.</p>
+                            <p>Для меня ты являешься земным ангелом, честно, у тебя такая мощная аура, прям вай. 🤍</p>
+                        </div>
+                        <button class="cyber-btn quote-trigger-btn" onclick="toggleQuotesModal(true)">
+                            <span>ОТКРЫТЬ ЦИТАТЫ ОТ ГРОМА</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="quotes-modal" class="modal-overlay">
+            <div class="modal-body-card">
+                <button class="close-modal-btn" onclick="toggleQuotesModal(false)">✕</button>
+                <h3>Строчки из песен/реплики персонажей</h3>
+                <p class="modal-subtitle">Строки, которые как-либо ассоциируются с тобой</p>
+                <div class="modal-quotes-scroll">
+                    <div class="quotes-grid">
+                        <div class="quote-card">
+                            <span class="quote-source">ТРАВМА — Системный сбой</span>
+                            <p>«Я удивляюсь, как ты еще не устала<br>День и ночь во мне выявляешь баги»</p>
+                        </div>
+                        <div class="quote-card">
+                            <span class="quote-source">МУККА — Крыльями</span>
+                            <p>«Когда тень одиночества горько ноет внутри меня<br>Возьми меня за руку, укрой меня крыльями»</p>
+                        </div>
+                        <div class="quote-card">
+                            <span class="quote-source">Слава КПСС, МУККА — Последний раз</span>
+                            <p>«Я знаю тысячу причин не отводить от тебя глаз<br>Давай сейчас поговорим в последний раз, хотя бы раз»</p>
+                        </div>
+                        <div class="quote-card">
+                            <span class="quote-source">Три дня дождя, TRITIA — После меня</span>
+                            <p>«Мне бы хотелось уйти<br>В моменте с твоих глаз долой<br>Я сам по себе нелюдим»</p>
+                        </div>
+                        <div class="quote-card special-quote-card">
+                            <span class="quote-source">⭐ Особенная • Харуми из Ниндзяго</span>
+                            <p>«Мы вынуждены исполнять роли, которые нам навязаны. Нам не предлагали выбрать, кем мы станем»</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="music-page" class="page-container">
+        <div class="main-card music-card-albums">
+            <h2 class="music-title">Мини-плеер</h2>
+            <p class="subtitle-music">Здесь можно послушать музычку</p>
+
+            <div id="angel-easter-egg" class="easter-egg-container">
+                <img src="angel_art.jpg" alt="Убитый ангел" class="easter-egg-img">
+                <p class="easter-egg-caption">Хе-хе</p>
+            </div>
+
+            <audio id="main-audio" src=""></audio>
+
+            <div class="music-layout">
+                <aside class="albums-panel">
+                    <div class="secret-block">
+                        <button class="secret-btn" id="secret-btn" onclick="toggleSecret()">Треки от меня: скрыты</button>
+                    </div>
+
+                    <ul class="albums-list" id="albums-list"></ul>
+                </aside>
+
+                <section class="tracks-section">
+                    <div class="player-controls">
+                        <span id="current-title">Выбери трек</span>
+                        <div class="progress-container" id="progress-container">
+                            <span id="current-time">0:00</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill"></div>
+                            </div>
+                            <span id="duration">0:00</span>
+                        </div>
+                        <div class="control-buttons">
+                            <button class="player-btn prev-btn" onclick="playPrev()" title="Назад"></button>
+                            <button class="player-btn play-btn" id="play-pause-btn" onclick="togglePlay()" title="Плей/Пауза"></button>
+                            <button class="player-btn next-btn" onclick="playNext()" title="Вперёд"></button>
+                            <button class="player-btn shuffle-btn" id="shuffle-btn" onclick="openShuffleModal()" title="Перемешать">🔀</button>
+                            <div class="volume-wrap">
+                                <button class="player-btn volume-btn" id="volume-btn" onclick="toggleMute()" title="Вкл/выкл звук">🔊</button>
+                                <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="100" title="Громкость">
+                            </div>
+                            <button class="player-btn queue-toggle-btn" id="queue-toggle-btn" onclick="toggleQueuePanel()" title="Очередь">📋</button>
+                        </div>
+
+                        <div class="queue-panel" id="queue-panel">
+                            <div class="queue-header">
+                                <span class="queue-header-title" id="queue-title">Очередь</span>
+                                <button class="queue-clear-btn" id="queue-clear-btn" onclick="clearQueue()" style="display:none;">Очистить</button>
+                            </div>
+                            <ul class="queue-list" id="queue-list"></ul>
+                        </div>
+                    </div>
+
+                    <div class="favorites-block" id="favorites-block" style="display:none;">
+                        <div class="favorites-header">❤️ Любимые треки</div>
+                        <ul class="playlist" id="favorites-list"></ul>
+                    </div>
+
+                    <div class="album-tracks-wrap">
+                        <div class="album-tracks-header">
+                            <span id="current-album-name">Выбери альбом</span>
+                            <span class="album-tracks-count" id="current-album-count"></span>
+                        </div>
+                        <ul class="playlist" id="album-tracks-list"></ul>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <div id="shuffle-modal" class="modal-overlay">
+        <div class="modal-body-card shuffle-modal-card">
+            <button class="close-modal-btn" onclick="closeShuffleModal()">✕</button>
+            <h3>Перемешать 🔀</h3>
+            <p class="modal-subtitle">Что хотим послушать в случайном порядке?</p>
+
+            <div class="shuffle-options">
+                <label class="shuffle-option">
+                    <input type="radio" name="shuffle-mode" value="all" checked>
+                    <span class="shuffle-option-label">
+                        <strong>📻 Все треки</strong>
+                        <small>Все альбомы подряд в случайном порядке</small>
+                    </span>
+                </label>
+                <label class="shuffle-option">
+                    <input type="radio" name="shuffle-mode" value="favorites">
+                    <span class="shuffle-option-label">
+                        <strong>❤️ Только избранные</strong>
+                        <small>Избранные треки и треки из избранных альбомов</small>
+                    </span>
+                </label>
+                <label class="shuffle-option">
+                    <input type="radio" name="shuffle-mode" value="current-album">
+                    <span class="shuffle-option-label">
+                        <strong>💿 Текущий альбом</strong>
+                        <small id="shuffle-current-album-name">—</small>
+                    </span>
+                </label>
+                <label class="shuffle-option">
+                    <input type="radio" name="shuffle-mode" value="selected">
+                    <span class="shuffle-option-label">
+                        <strong>✅ Выбранные альбомы</strong>
+                        <small>Отметь, из каких альбомов брать треки</small>
+                    </span>
+                </label>
+            </div>
+
+            <div id="shuffle-albums-picker" class="shuffle-albums-picker">
+                <div class="shuffle-picker-actions">
+                    <button class="mini-btn" onclick="shuffleSelectAll(true)">Выбрать все</button>
+                    <button class="mini-btn" onclick="shuffleSelectAll(false)">Снять все</button>
+                </div>
+                <div class="shuffle-albums-list" id="shuffle-albums-list"></div>
+            </div>
+
+            <div class="shuffle-actions">
+                <button class="cyber-btn shuffle-start-btn" onclick="startShuffle()">ЗАПУСТИТЬ</button>
+                <button class="cyber-btn shuffle-stop-btn" id="shuffle-stop-btn" onclick="stopShuffle()" style="display:none;">СТОП SHUFFLE</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="quest-page" class="page-container">
+        <div class="main-card quest-card">
+            <div class="quest-progress-wrap">
+                <div class="quest-progress-text" id="quest-progress-text">Шаг 1 из 7</div>
+                <div class="quest-progress-bar">
+                    <div class="quest-progress-fill" id="quest-progress-fill"></div>
+                </div>
+            </div>
+            <div id="quest-step-container"></div>
+        </div>
+    </div>
+
+    <script>
+        
+        // 0. ПАРОЛЬ
+        
+        const SECRET_PASSWORD = "Daenerys_ot_groma";
+        const lockScreen = document.getElementById('lock-screen');
+        const lockInput = document.getElementById('lock-input');
+        const lockSubmit = document.getElementById('lock-submit');
+        const lockError = document.getElementById('lock-error');
+        const devSkipBtn = document.getElementById('dev-skip-btn');
+
+        function unlockSite() {
+            lockScreen.classList.add('unlocked');
+            document.body.classList.remove('locked');
+            sessionStorage.setItem('daenerys_unlocked', 'true');
+            setTimeout(() => { lockScreen.style.display = 'none'; }, 800);
+        }
+        function checkPassword() {
+            const entered = lockInput.value.trim();
+            if (entered === SECRET_PASSWORD) unlockSite();
+            else {
+                lockError.textContent = "Неверный код. Попробуй ещё раз 🤍";
+                lockInput.classList.add('shake');
+                lockInput.value = '';
+                setTimeout(() => lockInput.classList.remove('shake'), 400);
+            }
+        }
+        if (sessionStorage.getItem('daenerys_unlocked') === 'true') {
+            lockScreen.style.display = 'none';
+            document.body.classList.remove('locked');
+        } else {
+            document.body.classList.add('locked');
+            setTimeout(() => lockInput.focus(), 600);
+        }
+        if (lockSubmit) lockSubmit.addEventListener('click', checkPassword);
+        if (lockInput) {
+            lockInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') checkPassword();
+                if (e.key === 'Escape') e.preventDefault();
+            });
+            lockInput.addEventListener('input', () => { if (lockError.textContent) lockError.textContent = ''; });
+        }
+        if (devSkipBtn) devSkipBtn.addEventListener('click', unlockSite);
+
+        
+        // 1. ЗВЁЗДЫ
+        
+        const canvas = document.getElementById('starsCanvas');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        const numStars = window.innerWidth < 700 ? 60 : 130;
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        for (let i = 0; i < numStars; i++) {
+            stars.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 2 + 0.3, alpha: Math.random(), speed: Math.random() * 0.015 + 0.005 });
+        }
+        function animateStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ffffff';
+            stars.forEach(star => {
+                star.alpha += star.speed;
+                if (star.alpha > 1 || star.alpha < 0) star.speed = -star.speed;
+                ctx.globalAlpha = Math.abs(star.alpha);
+                ctx.beginPath(); ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2); ctx.fill();
+            });
+            requestAnimationFrame(animateStars);
+        }
+        animateStars();
+
+        
+        // 2. СТРАНИЦЫ
+        
+        function showPage(pageId) {
+            document.querySelectorAll('.page-container').forEach(page => page.classList.remove('active-page'));
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) targetPage.classList.add('active-page');
+            const map = { 'home-page': 'link-home', 'poems-page': 'link-poems', 'gromych-page': 'link-gromych', 'music-page': 'link-music', 'quest-page': 'link-quiz' };
+            if (map[pageId]) { const link = document.getElementById(map[pageId]); if (link) link.classList.add('active'); }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        
+        // 3. СТИХИ
+        
+        function switchPoem(poemNum) {
+            document.querySelectorAll('.poem-scroll-box').forEach(box => box.classList.remove('active-poem-content'));
+            document.querySelectorAll('.poem-tab-btn').forEach(btn => btn.classList.remove('active-tab-btn'));
+            document.getElementById(`poem-content-${poemNum}`).classList.add('active-poem-content');
+            document.getElementById(`tab-btn-${poemNum}`).classList.add('active-tab-btn');
+        }
+
+        
+        // 4. МУЗЫКА: ДАННЫЕ
+        
+        const albumsData = [
+            { 
+    id: 'slava-kpss', 
+    name: 'Слава КПСС', 
+    year: '', 
+    tracks: [
+        { src: 'music/slava-kpss/my-vstretimsya-s-toboy.m4a', title: 'Мы встретимся с тобой' },
+        { src: 'music/slava-kpss/posledniy-raz.mp3', title: 'Последний раз' },
+        { src: 'music/slava-kpss/peski-vremeni.mp3', title: 'Пески времени' },
+        { src: 'music/slava-kpss/i_kill_angel.mp3', title: 'Я убил ангела' },
+        { src: 'music/slava-kpss/dux.mp3', title: 'Духовная нищанка' },
+        { src: 'music/slava-kpss/sun.mp3', title: 'Солнце' },
+        { src: 'music/slava-kpss/RKN.mp3', title: 'РКН' },
+        { src: 'music/slava-kpss/gret_goev.mp3', title: 'Греть гоев' },
+        { src: 'music/slava-kpss/I_love_you_girl.mp3', title: 'Я люблю, тебя, девочка' },
+        { src: 'music/slava-kpss/monster.mp3', title: 'Чудовище погубившее мир' }
+    ] 
+},
+{ 
+    id: 'noize-mc', 
+    name: 'Noize MC', 
+    year: '', 
+    tracks: [
+        { src: 'music/noize-mc/egoism.mp3', title: 'Эгоизм' },
+        { src: 'music/noize-mc/instinct.mp3', title: 'Инстинкт' },
+        { src: 'music/noize-mc/lebedi.m4a', title: 'Кооператив "Лебединое озеро"' },
+        { src: 'music/noize-mc/light_line.mp3', title: 'Светлая полоса' },
+        { src: 'music/noize-mc/Ne_vse_doma.m4a', title: 'Не все дома' },
+        { src: 'music/noize-mc/reasons.m4a', title: 'Причины для радости' },
+        { src: 'music/noize-mc/rugan.mp3', title: 'Ругань из-за стены' },
+        { src: 'music/noize-mc/spider.mp3', title: 'Паучьими тенётами' },
+        { src: 'music/noize-mc/world_inf.mp3', title: 'Вселенная бесконечна?' },
+        { src: 'music/noize-mc/future.mp3', title: 'Yes Future!' } 
+    ] 
+},
+            { 
+    id: 'secret', 
+    name: 'Треки от Grom', 
+    year: '', 
+    tracks: [
+        { src: 'music/secret/Ne_veru.mp3', title: 'TRITIA - Я тебе не верю' },
+        { src: 'music/secret/go_go.mp3', title: 'TRITIA - Уходя уходи' },
+        { src: 'music/secret/Sorry.mp3', title: 'TRITIA - Прости' },
+        { src: 'music/secret/voice.mp3', title: 'TRITIA, ТРАВМА - Без твоего голоса' }
+    ] 
+}
+        ];
+
+        const audio = document.getElementById('main-audio');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const currentTitle = document.getElementById('current-title');
+        const progressBar = document.querySelector('.progress-bar');
+        const progressFill = document.getElementById('progress-fill');
+        const currentTimeEl = document.getElementById('current-time');
+        const durationEl = document.getElementById('duration');
+
+        let isPlaying = false;
+        let currentAlbumIndex = 0;
+        let currentTrackIndex = 0;
+        let queuePanelOpen = false;
+        let secretRevealed = false;
+
+        let favAlbums = JSON.parse(localStorage.getItem('fav-albums') || '[]');
+        let favTracks = JSON.parse(localStorage.getItem('fav-tracks') || '[]');
+
+        function toggleFavAlbum(albumId, event) {
+            event.stopPropagation();
+            const idx = favAlbums.indexOf(albumId);
+            if (idx === -1) favAlbums.push(albumId); else favAlbums.splice(idx, 1);
+            localStorage.setItem('fav-albums', JSON.stringify(favAlbums));
+            renderAlbums(); renderFavorites();
+        }
+        function toggleFavTrack(albumId, trackIdx, event) {
+            event.stopPropagation();
+            const key = `${albumId}::${trackIdx}`;
+            const idx = favTracks.findIndex(t => `${t.albumId}::${t.trackIdx}` === key);
+            if (idx === -1) favTracks.push({ albumId, trackIdx }); else favTracks.splice(idx, 1);
+            localStorage.setItem('fav-tracks', JSON.stringify(favTracks));
+            renderAlbumTracks(); renderFavorites();
+        }
+        function isFavAlbum(albumId) { return favAlbums.includes(albumId); }
+        function isFavTrack(albumId, trackIdx) { return favTracks.some(t => t.albumId === albumId && t.trackIdx === trackIdx); }
+
+        function renderFavorites() {
+            const wrap = document.getElementById('favorites-block');
+            const list = document.getElementById('favorites-list');
+            if (!wrap || !list) return;
+            const albumIdsFromTracks = [...new Set(favTracks.map(t => t.albumId))];
+            const allFavAlbumIds = [...new Set([...favAlbums, ...albumIdsFromTracks])];
+            if (allFavAlbumIds.length === 0) { wrap.style.display = 'none'; return; }
+            wrap.style.display = 'block';
+            list.innerHTML = '';
+            allFavAlbumIds.forEach(albumId => {
+                const albumIdx = albumsData.findIndex(a => a.id === albumId);
+                if (albumIdx === -1) return;
+                const album = albumsData[albumIdx];
+                const header = document.createElement('li');
+                header.style.cssText = 'padding: 8px 0 4px; font-size: 0.75rem; color: #ffd700; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; border-bottom: 1px solid rgba(255,215,0,0.1); margin-bottom: 6px; list-style: none;';
+                header.textContent = album.name;
+                list.appendChild(header);
+                if (favAlbums.includes(albumId)) {
+                    if (album.tracks.length === 0) {
+                        const empty = document.createElement('li');
+                        empty.className = 'album-empty';
+                        empty.style.padding = '10px';
+                        empty.textContent = 'Треки скоро появятся ✨';
+                        list.appendChild(empty);
+                    } else album.tracks.forEach((_, idx) => list.appendChild(makeTrackItem(albumIdx, idx, true)));
+                } else {
+                    favTracks.forEach(ft => { if (ft.albumId === albumId) list.appendChild(makeTrackItem(albumIdx, ft.trackIdx, true)); });
+                }
+            });
+        }
+
+        function renderAlbums() {
+            const list = document.getElementById('albums-list');
+            if (!list) return;
+            list.innerHTML = '';
+            albumsData.forEach((album, idx) => {
+                if (album.id === 'secret' && !secretRevealed) return;
+                const li = document.createElement('li');
+                li.className = 'album-item' + (idx === currentAlbumIndex ? ' active-album' : '');
+                const star = document.createElement('button');
+                star.className = 'album-fav-btn' + (isFavAlbum(album.id) ? ' is-fav' : '');
+                star.textContent = '⭐';
+                star.title = 'В избранное';
+                star.onclick = (e) => toggleFavAlbum(album.id, e);
+                const info = document.createElement('div');
+                info.className = 'album-info';
+                info.innerHTML = `<span class="album-name">${album.name}</span><span class="album-meta">${album.tracks.length} ${declOfNum(album.tracks.length, ['трек','трека','треков'])}</span>`;
+                const badge = document.createElement('span');
+                badge.className = 'album-tracks-badge';
+                badge.textContent = album.tracks.length;
+                li.appendChild(star); li.appendChild(info); li.appendChild(badge);
+                li.addEventListener('click', () => selectAlbum(idx));
+                list.appendChild(li);
+            });
+        }
+
+        function declOfNum(n, titles) {
+            const cases = [2, 0, 1, 1, 1, 2];
+            return titles[(n % 100 > 4 && n % 100 < 20) ? 2 : cases[(n % 10 < 5) ? n % 10 : 5]];
+        }
+        function selectAlbum(albumIdx) { currentAlbumIndex = albumIdx; currentTrackIndex = 0; renderAlbums(); renderAlbumTracks(); renderQueue(); }
+
+        function makeTrackItem(albumIdx, trackIdx, fromFavorites = false) {
+            const album = albumsData[albumIdx];
+            const track = album.tracks[trackIdx];
+            if (!track) return document.createElement('li');
+            const li = document.createElement('li');
+            li.className = 'track-item';
+            const isCurrent = (albumIdx === currentAlbumIndex && trackIdx === currentTrackIndex && isPlaying);
+            if (isCurrent) li.classList.add('active-track');
+            const favBtn = document.createElement('button');
+            favBtn.className = 'track-fav-btn' + (isFavTrack(album.id, trackIdx) ? ' is-fav' : '');
+            favBtn.textContent = '❤️';
+            favBtn.title = 'В избранное';
+            favBtn.onclick = (e) => toggleFavTrack(album.id, trackIdx, e);
+            const num = document.createElement('span');
+            num.className = 'track-num';
+            num.textContent = String(trackIdx + 1).padStart(2, '0');
+            const name = document.createElement('span');
+            name.className = 'track-name';
+            name.textContent = track.title;
+            const stats = document.createElement('span');
+            stats.className = 'track-stats';
+            stats.textContent = '🎧 ' + getTrackCount(albumIdx, trackIdx);
+            li.appendChild(favBtn); li.appendChild(num); li.appendChild(name); li.appendChild(stats);
+            li.addEventListener('click', () => {
+                if (fromFavorites && albumIdx !== currentAlbumIndex) { currentAlbumIndex = albumIdx; renderAlbums(); }
+                selectTrack(trackIdx);
+            });
+            return li;
+        }
+
+        function renderAlbumTracks() {
+            const album = albumsData[currentAlbumIndex];
+            const list = document.getElementById('album-tracks-list');
+            const nameEl = document.getElementById('current-album-name');
+            const countEl = document.getElementById('current-album-count');
+            if (!list || !album) return;
+            nameEl.textContent = album.name;
+            countEl.textContent = `${album.tracks.length} ${declOfNum(album.tracks.length, ['трек','трека','треков'])}`;
+            list.innerHTML = '';
+            if (album.tracks.length === 0) {
+                const empty = document.createElement('li');
+                empty.className = 'album-empty';
+                empty.textContent = 'Треки скоро появятся ✨';
+                list.appendChild(empty);
+                return;
+            }
+            album.tracks.forEach((_, idx) => list.appendChild(makeTrackItem(currentAlbumIndex, idx, false)));
+        }
+
+        function getTrackCount(albumIdx, trackIdx) {
+            const album = albumsData[albumIdx];
+            if (!album) return 0;
+            return parseInt(localStorage.getItem(`track-count-${album.id}-${trackIdx}`) || 0);
+        }
+        function incrementTrackCount(albumIdx, trackIdx) {
+            const album = albumsData[albumIdx];
+            if (!album) return;
+            const c = getTrackCount(albumIdx, trackIdx) + 1;
+            localStorage.setItem(`track-count-${album.id}-${trackIdx}`, c);
+        }
+
+        function formatTime(seconds) {
+            if (isNaN(seconds) || seconds === Infinity) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        function togglePlay() {
+            if (!playPauseBtn || !audio.src) return;
+            if (isPlaying) {
+                audio.pause();
+                playPauseBtn.classList.remove('playing'); playPauseBtn.classList.add('paused');
+                isPlaying = false;
+            } else {
+                audio.play().catch(() => console.log("MP3 не найден"));
+                playPauseBtn.classList.remove('paused'); playPauseBtn.classList.add('playing');
+                isPlaying = true;
+                const track = albumsData[currentAlbumIndex].tracks[currentTrackIndex];
+                const easterEgg = document.getElementById('angel-easter-egg');
+                if (easterEgg && track && track.title.includes('Я убил ангела')) {
+                    easterEgg.style.display = 'block';
+                    setTimeout(() => easterEgg.classList.add('show-art'), 10);
+                }
+            }
+            renderQueue();
+        }
+
+        function selectTrack(trackIdx) {
+            const album = albumsData[currentAlbumIndex];
+            if (!album || !album.tracks[trackIdx]) return;
+            currentTrackIndex = trackIdx;
+            const track = album.tracks[trackIdx];
+            audio.src = track.src;
+            currentTitle.textContent = track.title;
+            renderAlbumTracks(); renderFavorites();
+            audio.play().then(() => {
+                playPauseBtn.classList.remove('paused'); playPauseBtn.classList.add('playing');
+                isPlaying = true; renderAlbumTracks();
+            }).catch(() => {
+                playPauseBtn.classList.remove('playing'); playPauseBtn.classList.add('paused');
+                isPlaying = false;
+            });
+            const easterEgg = document.getElementById('angel-easter-egg');
+            if (easterEgg) {
+                if (track.title.includes('Я убил ангела')) {
+                    easterEgg.style.display = 'block';
+                    setTimeout(() => easterEgg.classList.add('show-art'), 10);
+                } else {
+                    easterEgg.classList.remove('show-art');
+                    setTimeout(() => { if (!easterEgg.classList.contains('show-art')) easterEgg.style.display = 'none'; }, 600);
+                }
+            }
+            renderQueue();
+        }
+
+        function playNext() {
+            if (shuffleActive && shuffleQueue.length > 0) {
+                shufflePosition++;
+                if (shufflePosition >= shuffleQueue.length) { shuffleQueue = shuffleArray(shuffleQueue); shufflePosition = 0; }
+                playShuffleCurrent(); return;
+            }
+            const album = albumsData[currentAlbumIndex];
+            if (!album || album.tracks.length === 0) { nextAlbumWithTracks(1); return; }
+            const next = currentTrackIndex + 1;
+            if (next >= album.tracks.length) { nextAlbumWithTracks(1); return; }
+            selectTrack(next);
+        }
+
+        function playPrev() {
+            if (shuffleActive && shuffleQueue.length > 0) {
+                shufflePosition--;
+                if (shufflePosition < 0) shufflePosition = shuffleQueue.length - 1;
+                playShuffleCurrent(); return;
+            }
+            const album = albumsData[currentAlbumIndex];
+            if (!album || album.tracks.length === 0) { nextAlbumWithTracks(-1); return; }
+            const prev = currentTrackIndex - 1;
+            if (prev < 0) { nextAlbumWithTracks(-1); return; }
+            selectTrack(prev);
+        }
+
+        function nextAlbumWithTracks(direction) {
+            let i = currentAlbumIndex;
+            for (let step = 0; step < albumsData.length; step++) {
+                i = (i + direction + albumsData.length) % albumsData.length;
+                if (albumsData[i].tracks.length > 0) {
+                    if (albumsData[i].id === 'secret' && !secretRevealed) continue;
+                    currentAlbumIndex = i;
+                    currentTrackIndex = direction > 0 ? 0 : albumsData[i].tracks.length - 1;
+                    renderAlbums(); renderAlbumTracks();
+                    selectTrack(currentTrackIndex);
+                    return;
+                }
+            }
+        }
+
+        if (audio) {
+            audio.addEventListener('timeupdate', () => {
+                const { duration, currentTime } = audio;
+                if (!duration) return;
+                const p = (currentTime / duration) * 100;
+                if (progressFill) progressFill.style.width = `${p}%`;
+                if (currentTimeEl) currentTimeEl.textContent = formatTime(currentTime);
+            });
+            audio.addEventListener('loadedmetadata', () => { if (durationEl) durationEl.textContent = formatTime(audio.duration); });
+            audio.addEventListener('ended', () => {
+                incrementTrackCount(currentAlbumIndex, currentTrackIndex);
+                renderAlbumTracks(); renderFavorites();
+                playNext();
+            });
+        }
+        if (progressBar) {
+            progressBar.addEventListener('click', (e) => {
+                const rect = progressBar.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const w = rect.width;
+                if (audio.duration && w > 0) audio.currentTime = (clickX / w) * audio.duration;
+            });
+        }
+        window.addEventListener('keydown', (e) => {
+            if (document.body.classList.contains('locked')) return;
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+            if (e.code === 'ArrowRight') playNext();
+            if (e.code === 'ArrowLeft') playPrev();
+        });
+
+        
+        // 5. ГРОМКОСТЬ
+        
+        const volumeBtn = document.getElementById('volume-btn');
+        const volumeSlider = document.getElementById('volume-slider');
+
+        let savedVolume = parseFloat(localStorage.getItem('player-volume'));
+        if (isNaN(savedVolume) || savedVolume <= 0) savedVolume = 1;
+        let savedMuted = localStorage.getItem('player-muted') === 'true';
+
+        audio.muted = false;
+        audio.volume = savedVolume;
+
+        if (volumeSlider) volumeSlider.value = Math.round(savedVolume * 100);
+        updateVolumeIcon(audio.volume);
+
+        function updateVolumeIcon(vol) {
+            if (!volumeBtn) return;
+            let icon = '🔊';
+            if (vol === 0) icon = '🔇';
+            else if (vol < 0.4) icon = '🔈';
+            else if (vol < 0.7) icon = '🔉';
+            volumeBtn.textContent = icon;
+            volumeBtn.classList.toggle('muted', vol === 0);
+        }
+
+        function toggleMute() {
+            if (!audio) return;
+            audio.muted = !audio.muted;
+            savedMuted = audio.muted;
+            localStorage.setItem('player-muted', String(savedMuted));
+            updateVolumeIcon(audio.muted ? 0 : audio.volume);
+        }
+
+        if (volumeSlider) {
+            volumeSlider.addEventListener('input', (e) => {
+                const val = parseInt(e.target.value) / 100;
+                audio.volume = val;
+                audio.muted = false;
+                savedVolume = val;
+                savedMuted = false;
+                localStorage.setItem('player-volume', val);
+                localStorage.setItem('player-muted', 'false');
+                updateVolumeIcon(val);
+            });
+        }
+
+        
+        // 6. ОЧЕРЕДЬ
+        
+        const queuePanel = document.getElementById('queue-panel');
+        const queueList = document.getElementById('queue-list');
+        const queueToggleBtn = document.getElementById('queue-toggle-btn');
+        const queueClearBtn = document.getElementById('queue-clear-btn');
+        const queueTitle = document.getElementById('queue-title');
+
+        function toggleQueuePanel() {
+            queuePanelOpen = !queuePanelOpen;
+            queuePanel.classList.toggle('open', queuePanelOpen);
+            queueToggleBtn.classList.toggle('active-queue', queuePanelOpen);
+            if (queuePanelOpen) renderQueue();
+        }
+
+        function renderQueue() {
+            if (!queueList) return;
+            if (!queuePanelOpen) return;
+            queueList.innerHTML = '';
+
+            if (shuffleActive && shuffleQueue.length > 0) {
+                queueTitle.textContent = `Очередь shuffle (${shuffleQueue.length})`;
+                queueClearBtn.style.display = 'inline-block';
+                queueClearBtn.disabled = false;
+                shuffleQueue.forEach((item, idx) => {
+                    const album = albumsData[item.albumIdx];
+                    if (!album) return;
+                    const track = album.tracks[item.trackIdx];
+                    if (!track) return;
+                    const li = document.createElement('li');
+                    li.className = 'queue-item' + (idx === shufflePosition ? ' current' : '');
+                    li.innerHTML = `
+                        <span class="queue-item-num">${idx === shufflePosition ? '▶' : String(idx + 1).padStart(2, '0')}</span>
+                        <div class="queue-item-info">
+                            <span class="queue-item-name">${track.title}</span>
+                            <span class="queue-item-album">${album.name}</span>
+                        </div>
+                        ${idx === shufflePosition ? '<span class="queue-playing-icon">🔊</span>' : ''}
+                    `;
+                    li.onclick = () => { shufflePosition = idx; playShuffleCurrent(); renderQueue(); };
+                    queueList.appendChild(li);
+                });
+            } else {
+                const album = albumsData[currentAlbumIndex];
+                if (!album) {
+                    queueList.innerHTML = `<div class="queue-empty"><span class="queue-empty-icon">📋</span>Выбери альбом и трек</div>`;
+                    queueTitle.textContent = 'Очередь';
+                    queueClearBtn.style.display = 'none';
+                    return;
+                }
+                if (album.tracks.length === 0) {
+                    queueList.innerHTML = `<div class="queue-empty"><span class="queue-empty-icon">📋</span>В этом альбоме пока нет треков</div>`;
+                    queueTitle.textContent = 'Очередь';
+                    queueClearBtn.style.display = 'none';
+                    return;
+                }
+                queueTitle.textContent = `Очередь: ${album.name}`;
+                queueClearBtn.style.display = 'none';
+                album.tracks.forEach((track, idx) => {
+                    const li = document.createElement('li');
+                    const isCurrent = idx === currentTrackIndex;
+                    li.className = 'queue-item' + (isCurrent ? ' current' : '');
+                    li.innerHTML = `
+                        <span class="queue-item-num">${isCurrent ? '▶' : String(idx + 1).padStart(2, '0')}</span>
+                        <div class="queue-item-info">
+                            <span class="queue-item-name">${track.title}</span>
+                        </div>
+                        ${isCurrent ? '<span class="queue-playing-icon">🔊</span>' : ''}
+                    `;
+                    li.onclick = () => selectTrack(idx);
+                    queueList.appendChild(li);
+                });
+            }
+        }
+
+        function clearQueue() {
+            if (!shuffleActive) return;
+            if (!confirm('Очистить очередь shuffle?')) return;
+            stopShuffle();
+            queuePanelOpen = false;
+            queuePanel.classList.remove('open');
+            queueToggleBtn.classList.remove('active-queue');
+        }
+
+        
+        // 7. SHUFFLE
+        
+        let shuffleQueue = [];
+        let shufflePosition = 0;
+        let shuffleActive = false;
+
+        function openShuffleModal() {
+            const modal = document.getElementById('shuffle-modal');
+            if (!modal) return;
+            const currentAlbum = albumsData[currentAlbumIndex];
+            const nameEl = document.getElementById('shuffle-current-album-name');
+            if (nameEl && currentAlbum) nameEl.textContent = currentAlbum.name;
+            renderShuffleAlbumsList();
+            const stopBtn = document.getElementById('shuffle-stop-btn');
+            if (stopBtn) stopBtn.style.display = shuffleActive ? 'inline-block' : 'none';
+            modal.classList.add('modal-open');
+            document.querySelectorAll('input[name="shuffle-mode"]').forEach(radio => {
+                radio.onchange = () => {
+                    const picker = document.getElementById('shuffle-albums-picker');
+                    if (radio.value === 'selected' && radio.checked) picker.classList.add('open');
+                    else if (radio.checked) picker.classList.remove('open');
+                };
+            });
+        }
+        function closeShuffleModal() {
+            const modal = document.getElementById('shuffle-modal');
+            if (modal) modal.classList.remove('modal-open');
+        }
+        function renderShuffleAlbumsList() {
+            const list = document.getElementById('shuffle-albums-list');
+            if (!list) return;
+            list.innerHTML = '';
+            albumsData.forEach((album, idx) => {
+                if (album.tracks.length === 0) return;
+                if (album.id === 'secret' && !secretRevealed) return;
+                const label = document.createElement('label');
+                label.className = 'shuffle-album-check';
+                const cb = document.createElement('input');
+                cb.type = 'checkbox'; cb.value = idx; cb.dataset.albumIdx = idx;
+                const name = document.createElement('span');
+                name.textContent = album.name;
+                const count = document.createElement('span');
+                count.className = 'sh-album-count';
+                count.textContent = album.tracks.length;
+                label.appendChild(cb); label.appendChild(name); label.appendChild(count);
+                list.appendChild(label);
+            });
+        }
+        function shuffleSelectAll(selectAll) {
+            document.querySelectorAll('#shuffle-albums-list input[type="checkbox"]').forEach(cb => { cb.checked = selectAll; });
+        }
+        function buildShufflePool(mode) {
+            const pool = [];
+            if (mode === 'all') {
+                albumsData.forEach((album, albumIdx) => {
+                    if (album.id === 'secret' && !secretRevealed) return;
+                    album.tracks.forEach((_, trackIdx) => { pool.push({ albumId: album.id, albumIdx, trackIdx }); });
+                });
+            } else if (mode === 'favorites') {
+                favTracks.forEach(ft => {
+                    const albumIdx = albumsData.findIndex(a => a.id === ft.albumId);
+                    if (albumIdx === -1) return;
+                    if (albumsData[albumIdx].tracks[ft.trackIdx]) pool.push({ albumId: ft.albumId, albumIdx, trackIdx: ft.trackIdx });
+                });
+                favAlbums.forEach(albumId => {
+                    const albumIdx = albumsData.findIndex(a => a.id === albumId);
+                    if (albumIdx === -1) return;
+                    albumsData[albumIdx].tracks.forEach((_, trackIdx) => {
+                        const exists = pool.some(p => p.albumId === albumId && p.trackIdx === trackIdx);
+                        if (!exists) pool.push({ albumId, albumIdx, trackIdx });
+                    });
+                });
+            } else if (mode === 'current-album') {
+                const album = albumsData[currentAlbumIndex];
+                if (album) album.tracks.forEach((_, trackIdx) => pool.push({ albumId: album.id, albumIdx: currentAlbumIndex, trackIdx }));
+            } else if (mode === 'selected') {
+                document.querySelectorAll('#shuffle-albums-list input[type="checkbox"]:checked').forEach(cb => {
+                    const albumIdx = parseInt(cb.dataset.albumIdx);
+                    const album = albumsData[albumIdx];
+                    if (!album) return;
+                    album.tracks.forEach((_, trackIdx) => pool.push({ albumId: album.id, albumIdx, trackIdx }));
+                });
+            }
+            return pool;
+        }
+        function shuffleArray(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+        function startShuffle() {
+            const mode = document.querySelector('input[name="shuffle-mode"]:checked')?.value || 'all';
+            const pool = buildShufflePool(mode);
+            if (pool.length === 0) { alert('Нет треков для перемешки 🤷‍♀️'); return; }
+            shuffleQueue = shuffleArray(pool);
+            shufflePosition = 0;
+            shuffleActive = true;
+            const btn = document.getElementById('shuffle-btn');
+            if (btn) btn.classList.add('active-shuffle');
+            closeShuffleModal();
+            playShuffleCurrent();
+            if (queuePanelOpen) renderQueue();
+        }
+        function playShuffleCurrent() {
+            if (!shuffleActive || shuffleQueue.length === 0) return;
+            const item = shuffleQueue[shufflePosition];
+            if (!item) { stopShuffle(); return; }
+            if (item.albumIdx !== currentAlbumIndex) {
+                currentAlbumIndex = item.albumIdx;
+                renderAlbums(); renderAlbumTracks();
+            }
+            selectTrack(item.trackIdx);
+            if (queuePanelOpen) renderQueue();
+        }
+        function stopShuffle() {
+            shuffleActive = false;
+            shuffleQueue = [];
+            shufflePosition = 0;
+            const btn = document.getElementById('shuffle-btn');
+            if (btn) btn.classList.remove('active-shuffle');
+            const stopBtn = document.getElementById('shuffle-stop-btn');
+            if (stopBtn) stopBtn.style.display = 'none';
+            closeShuffleModal();
+            if (queuePanelOpen) renderQueue();
+        }
+        const shuffleModal = document.getElementById('shuffle-modal');
+        if (shuffleModal) {
+            shuffleModal.addEventListener('click', (e) => { if (e.target === shuffleModal) closeShuffleModal(); });
+        }
+
+        
+        // 8. СЕКРЕТ
+        
+        function toggleSecret() {
+            secretRevealed = !secretRevealed;
+            const btn = document.getElementById('secret-btn');
+            if (btn) {
+                if (secretRevealed) {
+                    btn.textContent = 'Треки от меня: доступны';
+                    btn.classList.add('opened');
+                    const secretIdx = albumsData.findIndex(a => a.id === 'secret');
+                    if (secretIdx !== -1) {
+                        currentAlbumIndex = secretIdx;
+                        currentTrackIndex = 0;
+                    }
+                } else {
+                    btn.textContent = 'Треки от меня: скрыты';
+                    btn.classList.remove('opened');
+                }
+            }
+            renderAlbums();
+            renderAlbumTracks();
+            if (queuePanelOpen) renderQueue();
+        }
+
+        
+        // 9. КВЕСТ
+        
+        const QUEST_STEPS = [
+            {
+                type: 'question',
+                question: 'Дата нашей первой встречи вживую?',
+                options: ['1 сентября 2025', '27 августа 2025', '30 августа 2025', '29 августа 2025'],
+                correct: 2
+            },
+            {
+                type: 'wordle',
+                hint: 'Угадай слово из 5 букв. У тебя 6 попыток!',
+                word: 'АНГЕЛ'
+            },
+            {
+                type: 'question',
+                question: 'Сколько игр в спортивную мафию мы сыграли с тобой за одним столом?',
+                options: ['2', '1', '3', '6'],
+                correct: 1
+            },
+            { type: 'wires', hint: 'Соедини точки одного цвета непрерывными линиями. Линии не должны пересекаться и должны быть заняты все клеточки на поле' },
+            {
+                type: 'question',
+                question: 'Дата твоего первого поста в тг-канале? (Которые есть на данный момент)',
+                options: ['14 января 2025', '26 октября 2025', '7 января 2025', '26 января 2025'],
+                correct: 2
+            },
+            {
+                type: 'wordbuild',
+                hint: 'Обитает в небе и воде',
+                word: 'ЗВЕЗДА',
+                extraLetters: ['О', 'И', 'Н', 'Т', 'Р', 'С', 'Л', 'К', 'М']
+            },
+            { type: 'final' }
+        ];
+
+        let questCurrentStep = 0;
+        const questStepContainer = document.getElementById('quest-step-container');
+        const questProgressText = document.getElementById('quest-progress-text');
+        const questProgressFill = document.getElementById('quest-progress-fill');
+
+        const savedQuestStep = parseInt(localStorage.getItem('quest-step') || '0');
+        questCurrentStep = Math.min(savedQuestStep, QUEST_STEPS.length - 1);
+
+        function saveQuestProgress(step) { localStorage.setItem('quest-step', step); }
+
+        function updateProgress() {
+            const total = QUEST_STEPS.length;
+            const current = questCurrentStep + 1;
+            if (questProgressText) questProgressText.textContent = `Шаг ${current} из ${total}`;
+            if (questProgressFill) questProgressFill.style.width = `${(current / total) * 100}%`;
+        }
+
+        function nextQuestStep() {
+            if (questCurrentStep < QUEST_STEPS.length - 1) {
+                questCurrentStep++;
+                saveQuestProgress(questCurrentStep);
+                renderQuestStep();
+            }
+        }
+
+        function resetQuest() {
+            questCurrentStep = 0;
+            saveQuestProgress(0);
+            renderQuestStep();
+        }
+
+        function renderQuestStep() {
+            if (!questStepContainer) return;
+            updateProgress();
+            questStepContainer.innerHTML = '';
+            if (window._questKeyHandler) {
+                document.removeEventListener('keydown', window._questKeyHandler);
+                window._questKeyHandler = null;
+            }
+            const step = QUEST_STEPS[questCurrentStep];
+            if (!step) return;
+            if (step.type === 'question') renderQuestQuestion(step);
+            else if (step.type === 'wordle') renderQuestWordle(step);
+            else if (step.type === 'wires') renderQuestWires(step);
+            else if (step.type === 'wordbuild') renderQuestWordbuild(step);
+            else if (step.type === 'final') renderQuestFinal();
+        }
+
+        function renderQuestQuestion(step) {
+            const wrap = document.createElement('div');
+            wrap.className = 'quest-step';
+            wrap.innerHTML = `<h2 class="quest-question-text">${step.question}</h2>
+                <div class="quest-options"></div>
+                <p class="quest-feedback" id="quest-feedback"></p>`;
+            const optsWrap = wrap.querySelector('.quest-options');
+            const feedback = wrap.querySelector('#quest-feedback');
+            step.options.forEach((option, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'quest-opt-btn';
+                btn.textContent = option;
+                btn.addEventListener('click', () => {
+                    optsWrap.querySelectorAll('.quest-opt-btn').forEach(b => b.disabled = true);
+                    if (idx === step.correct) {
+                        btn.classList.add('correct-ans');
+                        feedback.textContent = 'Верно!';
+                        feedback.className = 'quest-feedback success';
+                        setTimeout(() => nextQuestStep(), 1200);
+                    } else {
+                        btn.classList.add('wrong-ans');
+                        optsWrap.querySelectorAll('.quest-opt-btn')[step.correct].classList.add('correct-ans');
+                        feedback.textContent = 'Неть... это не страшно - идём дальше!';
+                        feedback.className = 'quest-feedback error';
+                        setTimeout(() => nextQuestStep(), 1800);
+                    }
+                });
+                optsWrap.appendChild(btn);
+            });
+            questStepContainer.appendChild(wrap);
+        }
+
+        function renderQuestWordle(step) {
+            const word = step.word.toUpperCase();
+            const wordLength = word.length;
+            const maxAttempts = 6;
+            const wrap = document.createElement('div');
+            wrap.className = 'quest-step wordle-wrap';
+            let currentGuess = '';
+            let attempts = 0;
+            let gameOver = false;
+            wrap.innerHTML = `
+                <h2 class="quest-question-text">Угадай слово 🔤</h2>
+                <p class="wordle-hint">${step.hint}</p>
+                <div class="wordle-grid" id="wordle-grid"></div>
+                <div class="wordle-keyboard" id="wordle-keyboard"></div>
+                <p class="quest-feedback" id="wordle-feedback"></p>
+            `;
+            const grid = wrap.querySelector('#wordle-grid');
+            const keyboard = wrap.querySelector('#wordle-keyboard');
+            const feedback = wrap.querySelector('#wordle-feedback');
+            for (let r = 0; r < maxAttempts; r++) {
+                for (let c = 0; c < wordLength; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'wordle-cell';
+                    grid.appendChild(cell);
+                }
+            }
+            const kbRows = [
+                ['Й','Ц','У','К','Е','Н','Г','Ш','Щ','З','Х','Ъ'],
+                ['Ф','Ы','В','А','П','Р','О','Л','Д','Ж','Э'],
+                ['Я','Ч','С','М','И','Т','Ь','Б','Ю','Ё'],
+                ['ENTER','⌫']
+            ];
+            kbRows.forEach(rowArr => {
+                const row = document.createElement('div');
+                row.className = 'wordle-kb-row';
+                rowArr.forEach(key => {
+                    const btn = document.createElement('button');
+                    btn.className = 'wordle-key';
+                    btn.textContent = key;
+                    if (key === 'ENTER' || key === '⌫') btn.classList.add('wide');
+                    btn.dataset.key = key;
+                    btn.addEventListener('click', () => handleKey(key));
+                    row.appendChild(btn);
+                });
+                keyboard.appendChild(row);
+            });
+            function getCell(row, col) { return grid.children[row * wordLength + col]; }
+            function handleKey(key) {
+                if (gameOver) return;
+                if (key === 'ENTER') {
+                    if (currentGuess.length !== wordLength) {
+                        feedback.textContent = `Нужно ${wordLength} букв`;
+                        feedback.className = 'quest-feedback error';
+                        shakeRow(attempts);
+                        return;
+                    }
+                    submitGuess();
+                } else if (key === '⌫') {
+                    if (currentGuess.length > 0) { currentGuess = currentGuess.slice(0, -1); updateRow(attempts); }
+                } else if (currentGuess.length < wordLength) {
+                    currentGuess += key;
+                    updateRow(attempts);
+                }
+            }
+            function updateRow(row) {
+                for (let c = 0; c < wordLength; c++) {
+                    const cell = getCell(row, c);
+                    cell.textContent = currentGuess[c] || '';
+                    cell.classList.toggle('filled', !!currentGuess[c]);
+                }
+            }
+            function shakeRow(row) {
+                for (let c = 0; c < wordLength; c++) {
+                    const cell = getCell(row, c);
+                    cell.classList.add('shake');
+                    setTimeout(() => cell.classList.remove('shake'), 400);
+                }
+            }
+            function submitGuess() {
+                const guess = currentGuess;
+                const result = checkGuess(guess, word);
+                for (let c = 0; c < wordLength; c++) {
+                    const cell = getCell(attempts, c);
+                    cell.textContent = guess[c];
+                    cell.classList.remove('filled');
+                    cell.classList.add(result[c]);
+                }
+                updateKeyboard(guess, result);
+                attempts++;
+                currentGuess = '';
+                if (guess === word) {
+                    gameOver = true;
+                    feedback.textContent = 'Правильно!';
+                    feedback.className = 'quest-feedback success';
+                    setTimeout(() => nextQuestStep(), 1500);
+                } else if (attempts >= maxAttempts) {
+                    gameOver = true;
+                    feedback.textContent = `Слово было: ${word}`;
+                    feedback.className = 'quest-feedback error';
+                    setTimeout(() => nextQuestStep(), 2200);
+                } else {
+                    feedback.textContent = `Осталось попыток: ${maxAttempts - attempts}`;
+                    feedback.className = 'quest-feedback';
+                }
+            }
+            function checkGuess(guess, word) {
+                const result = new Array(wordLength).fill('absent');
+                const wordChars = word.split('');
+                const guessChars = guess.split('');
+                const used = new Array(wordLength).fill(false);
+                for (let i = 0; i < wordLength; i++) {
+                    if (guessChars[i] === wordChars[i]) { result[i] = 'correct'; used[i] = true; }
+                }
+                for (let i = 0; i < wordLength; i++) {
+                    if (result[i] === 'correct') continue;
+                    for (let j = 0; j < wordLength; j++) {
+                        if (!used[j] && guessChars[i] === wordChars[j]) {
+                            result[i] = 'present'; used[j] = true; break;
+                        }
+                    }
+                }
+                return result;
+            }
+            function updateKeyboard(guess, result) {
+                const priority = { correct: 3, present: 2, absent: 1 };
+                for (let i = 0; i < guess.length; i++) {
+                    const key = guess[i];
+                    const btn = keyboard.querySelector(`.wordle-key[data-key="${key}"]`);
+                    if (!btn) continue;
+                    const current = btn.classList.contains('correct') ? 'correct' :
+                                   btn.classList.contains('present') ? 'present' :
+                                   btn.classList.contains('absent') ? 'absent' : null;
+                    const newState = result[i];
+                    if (!current || priority[newState] > priority[current]) {
+                        btn.classList.remove('correct', 'present', 'absent');
+                        btn.classList.add(newState);
+                    }
+                }
+            }
+            const onKeyPress = (e) => {
+                if (!document.getElementById('quest-page').classList.contains('active-page')) return;
+                if (e.key === 'Enter') handleKey('ENTER');
+                else if (e.key === 'Backspace') handleKey('⌫');
+                else if (/^[а-яА-ЯёЁ]$/i.test(e.key)) handleKey(e.key.toUpperCase());
+            };
+            document.addEventListener('keydown', onKeyPress);
+            window._questKeyHandler = onKeyPress;
+            questStepContainer.appendChild(wrap);
+        }
+
+        function renderQuestWires(step) {
+            const SIZE = 5;
+            const pairs = [
+                { color: '#ff4757', points: [[0,0], [4,0]] },
+                { color: '#2ed573', points: [[2,3], [4,3]] },
+                { color: '#ffd700', points: [[0,1], [4,2]] },
+                { color: '#85a3ff', points: [[0,2], [4,4]] }
+            ];
+            const wrap = document.createElement('div');
+            wrap.className = 'quest-step wires-wrap';
+            wrap.innerHTML = `
+                <h2 class="quest-question-text">Соедини огоньки</h2>
+                <p class="wires-hint">${step.hint}</p>
+                <div class="wires-grid" id="wires-grid"></div>
+                <div class="wires-actions">
+                    <button class="cyber-btn btn-small" id="wires-reset-btn">СБРОСИТЬ</button>
+                </div>
+                <p class="quest-feedback" id="wires-feedback"></p>
+            `;
+            const grid = wrap.querySelector('#wires-grid');
+            const feedback = wrap.querySelector('#wires-feedback');
+            const resetBtn = wrap.querySelector('#wires-reset-btn');
+            let paths = {};
+            let activeColor = null;
+            let isDrawing = false;
+            const cells = [];
+            for (let r = 0; r < SIZE; r++) {
+                for (let c = 0; c < SIZE; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'wire-cell';
+                    cell.dataset.row = r;
+                    cell.dataset.col = c;
+                    grid.appendChild(cell);
+                    cells.push(cell);
+                }
+            }
+            function getCell(r, c) { return cells[r * SIZE + c]; }
+            function resetGame() {
+                paths = {};
+                activeColor = null;
+                isDrawing = false;
+                cells.forEach(cell => {
+                    cell.innerHTML = '';
+                    cell.classList.remove('filled');
+                    cell.style.color = '';
+                });
+                pairs.forEach((pair, colorIdx) => {
+                    pair.points.forEach(([r, c]) => {
+                        const cell = getCell(r, c);
+                        const dot = document.createElement('div');
+                        dot.className = 'wire-dot';
+                        dot.style.background = pair.color;
+                        dot.style.color = pair.color;
+                        cell.appendChild(dot);
+                    });
+                    paths[colorIdx] = [];
+                });
+                feedback.textContent = '';
+                feedback.className = 'quest-feedback';
+            }
+            function getColorAt(r, c) {
+                for (let i = 0; i < pairs.length; i++) {
+                    if (pairs[i].points.some(([pr, pc]) => pr === r && pc === c)) return i;
+                }
+                return null;
+            }
+            function startPath(colorIdx, r, c) {
+                paths[colorIdx] = [[r, c]];
+                activeColor = colorIdx;
+                isDrawing = true;
+                renderPaths();
+            }
+            function extendPath(r, c) {
+                if (!isDrawing || activeColor === null) return;
+                const path = paths[activeColor];
+                if (!path || path.length === 0) return;
+                const [lastR, lastC] = path[path.length - 1];
+                if (Math.abs(r - lastR) + Math.abs(c - lastC) !== 1) return;
+                if (path.length > 1) {
+                    const [prevR, prevC] = path[path.length - 2];
+                    if (prevR === r && prevC === c) {
+                        path.pop();
+                        renderPaths();
+                        return;
+                    }
+                }
+                if (path.some(([pr, pc]) => pr === r && pc === c)) return;
+                for (let otherColor in paths) {
+                    if (parseInt(otherColor) === activeColor) continue;
+                    if (paths[otherColor].some(([pr, pc]) => pr === r && pc === c)) return;
+                }
+                const cellColor = getColorAt(r, c);
+                if (cellColor !== null && cellColor !== activeColor) return;
+                path.push([r, c]);
+                renderPaths();
+                if (cellColor === activeColor && path.length > 1) {
+                    isDrawing = false;
+                    activeColor = null;
+                    checkWin();
+                }
+            }
+            function renderPaths() {
+                cells.forEach(cell => {
+                    cell.classList.remove('filled');
+                    cell.style.color = '';
+                    const dot = cell.querySelector('.wire-dot');
+                    if (dot) { cell.innerHTML = ''; cell.appendChild(dot); }
+                    else cell.innerHTML = '';
+                });
+                for (let colorIdx in paths) {
+                    const color = pairs[colorIdx].color;
+                    const path = paths[colorIdx];
+                    path.forEach(([r, c]) => {
+                        const cell = getCell(r, c);
+                        cell.classList.add('filled');
+                        cell.style.color = color;
+                        if (getColorAt(r, c) === null) {
+                            const seg = document.createElement('div');
+                            seg.style.cssText = `position:absolute; inset: 22%; background: ${color}; border-radius: 3px; box-shadow: 0 0 8px ${color};`;
+                            cell.appendChild(seg);
+                        }
+                    });
+                }
+            }
+            function checkWin() {
+                const allConnected = pairs.every((pair, idx) => {
+                    const path = paths[idx];
+                    if (!path || path.length < 2) return false;
+                    const [sr, sc] = path[0];
+                    const [er, ec] = path[path.length - 1];
+                    const startsAtPoint = pair.points.some(([pr, pc]) => pr === sr && pc === sc);
+                    const endsAtPoint = pair.points.some(([pr, pc]) => pr === er && pc === ec);
+                    return startsAtPoint && endsAtPoint && (sr !== er || sc !== ec);
+                });
+                if (allConnected) {
+                    feedback.textContent = 'Все фонарики соединены, ты большая молодец!';
+                    feedback.className = 'quest-feedback success';
+                    setTimeout(() => nextQuestStep(), 1500);
+                }
+            }
+            function posFromEvent(e) {
+                const touch = e.touches ? e.touches[0] : e;
+                const el = document.elementFromPoint(touch.clientX, touch.clientY);
+                if (!el) return null;
+                const cell = el.closest('.wire-cell');
+                if (!cell) return null;
+                return { r: parseInt(cell.dataset.row), c: parseInt(cell.dataset.col) };
+            }
+            grid.addEventListener('mousedown', (e) => {
+                const cell = e.target.closest('.wire-cell');
+                if (!cell) return;
+                const r = parseInt(cell.dataset.row);
+                const c = parseInt(cell.dataset.col);
+                const colorIdx = getColorAt(r, c);
+                if (colorIdx !== null) startPath(colorIdx, r, c);
+            });
+            grid.addEventListener('mouseover', (e) => {
+                if (!isDrawing) return;
+                const cell = e.target.closest('.wire-cell');
+                if (!cell) return;
+                extendPath(parseInt(cell.dataset.row), parseInt(cell.dataset.col));
+            });
+            document.addEventListener('mouseup', () => { isDrawing = false; activeColor = null; });
+            grid.addEventListener('touchstart', (e) => {
+                const p = posFromEvent(e);
+                if (!p) return;
+                const colorIdx = getColorAt(p.r, p.c);
+                if (colorIdx !== null) { startPath(colorIdx, p.r, p.c); e.preventDefault(); }
+            }, { passive: false });
+            grid.addEventListener('touchmove', (e) => {
+                if (!isDrawing) return;
+                const p = posFromEvent(e);
+                if (!p) return;
+                extendPath(p.r, p.c);
+                e.preventDefault();
+            }, { passive: false });
+            grid.addEventListener('touchend', () => { isDrawing = false; activeColor = null; });
+            resetBtn.addEventListener('click', resetGame);
+            resetGame();
+            questStepContainer.appendChild(wrap);
+        }
+
+        // ----- Игра "Собери слово" -----
+        function renderQuestWordbuild(step) {
+            const targetWord = step.word.toUpperCase();
+            const wordLength = targetWord.length;
+            const extraLetters = step.extraLetters || [];
+            const wrap = document.createElement('div');
+            wrap.className = 'quest-step wordbuild-wrap';
+
+            const allLetters = [...targetWord.split(''), ...extraLetters];
+            const shuffled = shuffleArray(allLetters);
+
+            let currentAnswer = [];
+            const usedLetterIdx = new Set();
+            let gameOver = false;
+
+            wrap.innerHTML = `
+                <h2 class="quest-question-text">Собери слово 🔤</h2>
+                <p class="wordbuild-hint">Подсказка: ${step.hint}</p>
+                <div class="wordbuild-answer" id="wordbuild-answer"></div>
+                <div class="wordbuild-letters" id="wordbuild-letters"></div>
+                <div class="wordbuild-actions">
+                    <button class="cyber-btn btn-small" id="wordbuild-reset">СБРОС</button>
+                    <button class="cyber-btn btn-small" id="wordbuild-hint-btn">ПОДСКАЗКА</button>
+                </div>
+                <p class="quest-feedback" id="wordbuild-feedback"></p>
+            `;
+
+            const answerEl = wrap.querySelector('#wordbuild-answer');
+            const lettersEl = wrap.querySelector('#wordbuild-letters');
+            const feedback = wrap.querySelector('#wordbuild-feedback');
+            const resetBtn = wrap.querySelector('#wordbuild-reset');
+            const hintBtn = wrap.querySelector('#wordbuild-hint-btn');
+
+            function renderAnswer() {
+                answerEl.innerHTML = '';
+                for (let i = 0; i < wordLength; i++) {
+                    const slot = document.createElement('div');
+                    slot.className = 'wordbuild-answer-slot';
+                    if (currentAnswer[i]) {
+                        slot.textContent = currentAnswer[i];
+                        slot.classList.add('filled');
+                    }
+                    slot.addEventListener('click', () => {
+                        if (gameOver) return;
+                        if (currentAnswer[i]) {
+                            const originalIdx = currentAnswer._indices ? currentAnswer._indices[i] : null;
+                            if (originalIdx !== null && originalIdx !== undefined) {
+                                usedLetterIdx.delete(originalIdx);
+                            }
+                            currentAnswer.splice(i, 1);
+                            if (currentAnswer._indices) currentAnswer._indices.splice(i, 1);
+                            renderAnswer();
+                            renderLetters();
+                        }
+                    });
+                    answerEl.appendChild(slot);
+                }
+            }
+
+            function renderLetters() {
+                lettersEl.innerHTML = '';
+                shuffled.forEach((letter, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'wordbuild-letter';
+                    btn.textContent = letter;
+                    btn.dataset.idx = idx;
+                    if (usedLetterIdx.has(idx)) btn.classList.add('used');
+                    btn.addEventListener('click', () => {
+                        if (gameOver || usedLetterIdx.has(idx)) return;
+                        if (currentAnswer.length >= wordLength) return;
+                        currentAnswer.push(letter);
+                        if (!currentAnswer._indices) currentAnswer._indices = [];
+                        currentAnswer._indices.push(idx);
+                        usedLetterIdx.add(idx);
+                        renderAnswer();
+                        renderLetters();
+                        checkAnswer();
+                    });
+                    lettersEl.appendChild(btn);
+                });
+            }
+
+            function checkAnswer() {
+                if (currentAnswer.length !== wordLength) return;
+                const guess = currentAnswer.join('');
+                if (guess === targetWord) {
+                    gameOver = true;
+                    answerEl.querySelectorAll('.wordbuild-answer-slot').forEach(s => s.classList.add('correct'));
+                    feedback.textContent = 'Правильно! Ты собрала слово!';
+                    feedback.className = 'quest-feedback success';
+                    setTimeout(() => nextQuestStep(), 1800);
+                } else {
+                    feedback.textContent = 'Пока не то 🤔 Попробуй ещё!';
+                    feedback.className = 'quest-feedback error';
+                    setTimeout(() => {
+                        if (!gameOver) { feedback.textContent = ''; feedback.className = 'quest-feedback'; }
+                    }, 1500);
+                }
+            }
+
+            resetBtn.addEventListener('click', () => {
+                if (gameOver) return;
+                currentAnswer = [];
+                currentAnswer._indices = [];
+                usedLetterIdx.clear();
+                feedback.textContent = '';
+                feedback.className = 'quest-feedback';
+                renderAnswer();
+                renderLetters();
+            });
+
+            hintBtn.addEventListener('click', () => {
+                if (gameOver) return;
+                feedback.textContent = 'В левом верхнем углу спряталась одна из них';
+                feedback.className = 'quest-feedback success';
+                setTimeout(() => {
+                    if (!gameOver) { feedback.textContent = ''; feedback.className = 'quest-feedback'; }
+                }, 3000);
+            });
+
+            renderAnswer();
+            renderLetters();
+            questStepContainer.appendChild(wrap);
+        }
+
+        function renderQuestFinal() {
+            const wrap = document.createElement('div');
+            wrap.className = 'quest-step quest-final';
+            wrap.innerHTML = `
+                <div class="star-icon-placeholder">👑</div>
+                <h2>Квест пройден!</h2>
+                <p>Вот и подошла моя мини-интерактивная часть к своему заключению, надеюсь было интересно)</p>
+                <p class="highlight">⭐ Ты — супер! ⭐</p>
+                <p>С днём рождения, Василиса! 🎂</p>
+                <button class="cyber-btn quest-reset-btn" onclick="resetQuest()">ПРОЙТИ ЗАНОВО</button>
+            `;
+            questStepContainer.appendChild(wrap);
+            launchConfetti();
+            saveQuestProgress(QUEST_STEPS.length - 1);
+        }
+
+        function launchConfetti() {
+            const colors = ['#ffd700', '#ff4757', '#85a3ff', '#2ed573', '#ffffff', '#ff6b6b'];
+            for (let i = 0; i < 60; i++) {
+                setTimeout(() => {
+                    const piece = document.createElement('div');
+                    piece.className = 'confetti-piece';
+                    piece.style.left = Math.random() * 100 + 'vw';
+                    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    piece.style.width = (Math.random() * 8 + 6) + 'px';
+                    piece.style.height = (Math.random() * 8 + 6) + 'px';
+                    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                    piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(piece);
+                    setTimeout(() => piece.remove(), 5000);
+                }, i * 40);
+            }
+        }
+
+        
+        // 10. МОДАЛКА ЦИТАТ
+        
+        function toggleQuotesModal(isOpen) {
+            const modal = document.getElementById('quotes-modal');
+            if (!modal) return;
+            modal.classList.toggle('modal-open', isOpen);
+        }
+
+        
+        // 11. ИНИЦИАЛИЗАЦИЯ
+        
+        if (playPauseBtn) playPauseBtn.classList.add('paused');
+        renderAlbums();
+        renderAlbumTracks();
+        renderFavorites();
+        renderQuestStep();
+    </script>
+</body>
+</html>
